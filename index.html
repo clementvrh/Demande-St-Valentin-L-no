@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Valentine 💘</title>
+
   <style>
     :root{
       --bg: #fff8fb;
@@ -11,13 +12,13 @@
       --muted: #6b6b6b;
       --pink: #ff4d79;
       --pink2: #ff2f6b;
-      --btn: #ff4d79;
-      --btnText: #ffffff;
       --shadow: 0 12px 30px rgba(255, 77, 121, .22);
+      --ease: cubic-bezier(.22,.61,.36,1);
     }
 
     * { box-sizing: border-box; }
     html, body { height: 100%; }
+
     body{
       margin:0;
       font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
@@ -26,7 +27,7 @@
       overflow: hidden;
     }
 
-    /* Background hearts layer */
+    /* Background floating hearts */
     #bg{
       position: fixed;
       inset: 0;
@@ -39,11 +40,11 @@
       left: 0;
       font-size: 18px;
       opacity: .18;
-      filter: blur(.0px);
       transform: translate3d(0,0,0);
       animation: floatUp linear forwards;
       will-change: transform, opacity;
-      text-shadow: 0 10px 25px rgba(255, 77, 121, .2);
+      text-shadow: 0 10px 25px rgba(255, 77, 121, .22);
+      filter: drop-shadow(0 10px 20px rgba(255,77,121,.16));
     }
     @keyframes floatUp{
       0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0; }
@@ -52,7 +53,7 @@
       100% { transform: translate3d(var(--dx, 0px), -120vh, 0) scale(var(--s, 1)); opacity: 0; }
     }
 
-    /* Main layout */
+    /* Layout */
     .stage{
       position: relative;
       height: 100%;
@@ -62,76 +63,97 @@
     }
 
     .card{
-      width: min(720px, 92vw);
-      text-align: center;
-      padding: 34px 18px;
+      width: min(900px, 94vw);
       border-radius: 22px;
       background: rgba(255,255,255,.55);
       backdrop-filter: blur(10px);
       box-shadow: 0 20px 60px rgba(0,0,0,.07);
       border: 1px solid rgba(255,255,255,.55);
+      position: relative;
+      overflow: hidden;
+      min-height: 360px;
     }
 
+    /* Screens: real fade (no brutal display switching) */
+    .screen{
+      position: absolute;
+      inset: 0;
+      padding: 34px 18px;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .55s var(--ease), transform .55s var(--ease);
+      text-align: center;
+    }
+    .screen.active{
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Top hearts on first screen */
     .hearts-top{
       display:flex;
       gap: 10px;
       justify-content:center;
       align-items:center;
       margin-bottom: 8px;
-      height: 46px;
+      height: 52px;
     }
 
     .heart{
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       position: relative;
       transform: rotate(-45deg);
       background: var(--pink);
-      border-radius: 6px;
+      border-radius: 7px;
       animation: beat 1.2s ease-in-out infinite;
-      filter: drop-shadow(0 10px 20px rgba(255,77,121,.25));
+      filter:
+        drop-shadow(0 12px 18px rgba(255,77,121,.22))
+        drop-shadow(0 0 14px rgba(255,77,121,.22));
     }
     .heart::before,
     .heart::after{
       content:"";
       position:absolute;
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       background: var(--pink);
       border-radius: 50%;
+      filter: drop-shadow(0 0 12px rgba(255,77,121,.18));
     }
-    .heart::before{ top:-15px; left:0; }
-    .heart::after { left:15px; top:0; }
+    .heart::before{ top:-16px; left:0; }
+    .heart::after { left:16px; top:0; }
 
     .heart.small{
-      width: 20px; height: 20px;
+      width: 22px; height: 22px;
       opacity: .95;
       animation-duration: 1.35s;
     }
     .heart.small::before,
     .heart.small::after{
-      width: 20px; height: 20px;
+      width: 22px; height: 22px;
     }
-    .heart.small::before{ top:-10px; }
-    .heart.small::after{ left:10px; }
+    .heart.small::before{ top:-11px; }
+    .heart.small::after{ left:11px; }
 
     @keyframes beat{
       0%, 100% { transform: rotate(-45deg) scale(1); }
       18% { transform: rotate(-45deg) scale(1.08); }
       36% { transform: rotate(-45deg) scale(0.98); }
-      54% { transform: rotate(-45deg) scale(1.10); }
+      54% { transform: rotate(-45deg) scale(1.12); }
       72% { transform: rotate(-45deg) scale(1.00); }
     }
 
     h1{
-      font-size: clamp(26px, 3.2vw, 38px);
+      font-size: clamp(26px, 3.2vw, 40px);
       line-height: 1.15;
       margin: 10px 0 18px;
       letter-spacing: .2px;
     }
-
     .name{
-      font-weight: 800;
+      font-weight: 950;
       background: linear-gradient(90deg, var(--pink2), #ff7aa2);
       -webkit-background-clip: text;
       background-clip: text;
@@ -144,7 +166,6 @@
       gap: 12px;
       justify-content:center;
       margin-top: 18px;
-      position: relative;
       height: 58px;
     }
 
@@ -152,82 +173,109 @@
       border: 0;
       padding: 12px 18px;
       border-radius: 999px;
-      font-weight: 800;
+      font-weight: 950;
       font-size: 16px;
       cursor: pointer;
-      transition: transform .12s ease, box-shadow .22s ease, background .22s ease;
+      transition: transform .12s ease, box-shadow .22s ease, background .22s ease, opacity .22s ease;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
 
     #yesBtn{
-      background: var(--btn);
-      color: var(--btnText);
+      background: var(--pink);
+      color: #fff;
       box-shadow: var(--shadow);
       min-width: 120px;
     }
     #yesBtn:hover{ transform: translateY(-1px); }
     #yesBtn:active{ transform: translateY(1px) scale(.99); }
 
-    /* The "No" button is absolutely positioned inside a larger click area */
+    /* No button (global, full screen) */
     #noBtn{
-      position: absolute;
+      position: fixed;
       left: 50%;
-      top: 50%;
+      top: 62%;
       transform: translate(-50%, -50%);
       background: rgba(255, 77, 121, .10);
       color: var(--pink2);
       border: 1px solid rgba(255, 77, 121, .25);
-      min-width: 120px;
-      box-shadow: 0 10px 24px rgba(0,0,0,.05);
-      backdrop-filter: blur(6px);
+      min-width: 130px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.06);
+      backdrop-filter: blur(8px);
+      z-index: 50;
+      transition:
+        left .18s var(--ease),
+        top  .18s var(--ease),
+        opacity .25s ease,
+        transform .12s ease;
     }
-    #noBtn:hover{ transform: translate(-50%, -50%) scale(1.02); }
 
-    /* Screens */
-    .screen{
-      display: none;
+    /* Hint: appears only after first "No" interaction */
+    .hint{
+      margin-top: 12px;
+      font-size: 13px;
+      color: rgba(0,0,0,.40);
+      font-weight: 850;
+      min-height: 18px;
       opacity: 0;
-      transform: translateY(6px);
+      transform: translateY(4px);
       transition: opacity .35s ease, transform .35s ease;
     }
-    .screen.active{
-      display: block;
-    }
-    .screen.show{
+    .hint.show{
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* Loading screen */
+    /* Loading */
     .loaderWrap{
       display:flex;
       flex-direction: column;
       align-items:center;
       gap: 14px;
-      padding: 8px 0 0;
+      padding-top: 2px;
     }
 
+    .loadPhotoFrame{
+      width: min(520px, 86vw);
+      height: 200px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 77, 121, .18);
+      background: rgba(255,255,255,.55);
+      box-shadow: 0 18px 50px rgba(0,0,0,.08);
+    }
+    .loadPhotoFrame img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+      opacity: 1;
+      transition: opacity .35s ease;
+    }
+    .loadPhotoFrame img.fade{ opacity: 0; }
+
     .loaderHeart{
-      width: 28px; height: 28px;
+      width: 30px; height: 30px;
       transform: rotate(-45deg);
       background: var(--pink2);
-      border-radius: 6px;
-      filter: drop-shadow(0 10px 25px rgba(255,47,107,.22));
+      border-radius: 7px;
+      filter: drop-shadow(0 12px 25px rgba(255,47,107,.22)) drop-shadow(0 0 12px rgba(255,47,107,.20));
       animation: beat 1.15s ease-in-out infinite;
+      position: relative;
     }
     .loaderHeart::before, .loaderHeart::after{
       content:"";
       position:absolute;
-      width: 28px; height: 28px;
+      width: 30px; height: 30px;
       background: var(--pink2);
       border-radius: 50%;
+      filter: drop-shadow(0 0 12px rgba(255,47,107,.18));
     }
-    .loaderHeart::before{ top:-14px; left:0; }
-    .loaderHeart::after { left:14px; top:0; }
+    .loaderHeart::before{ top:-15px; left:0; }
+    .loaderHeart::after { left:15px; top:0; }
 
     .bar{
-      width: min(380px, 78vw);
+      width: min(440px, 80vw);
       height: 10px;
       background: rgba(255, 77, 121, .15);
       border-radius: 999px;
@@ -240,71 +288,125 @@
       width: 0%;
       background: linear-gradient(90deg, var(--pink2), #ff7aa2);
       border-radius: 999px;
-      transition: width .12s linear;
+      transition: width .18s var(--ease);
     }
-
     .percent{
-      font-weight: 900;
+      font-weight: 950;
       color: var(--pink2);
     }
+
     .loadingText{
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 900;
+      min-height: 22px;
+      opacity: 1;
+      transition: opacity .35s ease, transform .35s ease;
+      transform: translateY(0);
+    }
+    .loadingText.fadeOut{
+      opacity: 0;
+      transform: translateY(6px);
     }
 
-    /* Final screen */
-    .bigHeartGlow{
-      margin: 6px auto 8px;
-      width: 54px; height: 54px;
-      transform: rotate(-45deg);
-      background: var(--pink2);
-      border-radius: 10px;
-      animation: beat 1.2s ease-in-out infinite;
-      box-shadow: 0 0 0 rgba(255,47,107,.0);
-      filter: drop-shadow(0 18px 35px rgba(255,47,107,.18));
-      position: relative;
+    /* Final screen layout: text left, polaroids right */
+    .finalGrid{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 18px;
+      max-width: 860px;
+      margin: 0 auto;
     }
-    .bigHeartGlow::before, .bigHeartGlow::after{
+    @media (max-width: 820px){
+      .finalGrid{
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+    }
+
+    .finalText{
+      display:flex;
+      flex-direction: column;
+      align-items:center;
+      gap: 8px;
+    }
+
+    .bigHeart{
+      width: 64px; height: 64px;
+      transform: rotate(-45deg);
+      border-radius: 14px;
+      position: relative;
+      background: radial-gradient(circle at 35% 30%, #ffd1df 0%, #ff6b97 20%, var(--pink2) 62%, #d80f4b 100%);
+      animation: beat 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 18px 35px rgba(255,47,107,.22));
+      isolation: isolate;
+      margin-top: 2px;
+    }
+    .bigHeart::before, .bigHeart::after{
       content:"";
       position:absolute;
-      width: 54px; height: 54px;
-      background: var(--pink2);
+      width: 64px; height: 64px;
       border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffd1df 0%, #ff6b97 20%, var(--pink2) 62%, #d80f4b 100%);
     }
-    .bigHeartGlow::before{ top:-27px; left:0; }
-    .bigHeartGlow::after { left:27px; top:0; }
-
-    .glowPulse{
+    .bigHeart::before{ top:-32px; left:0; }
+    .bigHeart::after { left:32px; top:0; }
+    .bigHeart .glow{
       position:absolute;
-      inset: -18px;
-      border-radius: 16px;
-      background: radial-gradient(circle, rgba(255,47,107,.25), rgba(255,47,107,0) 62%);
+      inset: -22px;
+      border-radius: 20px;
+      background: radial-gradient(circle, rgba(255,47,107,.32), rgba(255,47,107,0) 62%);
       animation: glow 1.4s ease-in-out infinite;
       transform: rotate(45deg);
+      z-index: -1;
       pointer-events:none;
+      filter: blur(1px);
     }
     @keyframes glow{
       0%, 100% { opacity: .55; transform: rotate(45deg) scale(.98); }
-      50%      { opacity: .85; transform: rotate(45deg) scale(1.05); }
+      50%      { opacity: .98; transform: rotate(45deg) scale(1.08); }
     }
 
     .subtitle{
-      margin: 8px 0 6px;
+      margin: 4px 0 0;
       color: var(--muted);
-      font-weight: 800;
-    }
-
-    .loveLine{
-      margin: 0;
       font-weight: 900;
     }
+    .loveLine{
+      margin: 0;
+      font-weight: 950;
+    }
 
-    /* Small helper */
-    .hint{
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(0,0,0,.35);
-      font-weight: 700;
+    /* Final polaroids (your images already have the polaroid frame) */
+    .polaroidStack{
+      display:flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items:center;
+      justify-content:center;
+      padding-right: 6px;
+    }
+    .polaroidImg{
+      width: 220px;
+      max-width: 34vw;
+      height: auto;
+      border-radius: 18px;
+      box-shadow: 0 22px 60px rgba(0,0,0,.14);
+      border: 1px solid rgba(255,255,255,.55);
+      background: rgba(255,255,255,.3);
+    }
+    .tilt1{ transform: rotate(5deg); }
+    .tilt2{ transform: rotate(-6deg); }
+
+    @media (max-width: 820px){
+      .polaroidStack{
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding-right: 0;
+      }
+      .polaroidImg{
+        width: min(260px, 70vw);
+      }
     }
   </style>
 </head>
@@ -314,6 +416,7 @@
 
   <div class="stage">
     <div class="card">
+
       <!-- SCREEN 1 -->
       <section id="screenAsk" class="screen active">
         <div class="hearts-top">
@@ -326,40 +429,57 @@
           veux-tu être ma Valentine ?
         </h1>
 
-        <div class="buttons" id="btnZone">
+        <div class="buttons">
           <button id="yesBtn">Oui ! 💞</button>
-          <button id="noBtn">Non</button>
         </div>
 
-        <div class="hint">PS : le bouton “Non” est… un peu timide 😇</div>
+        <div id="hint" class="hint"></div>
       </section>
 
       <!-- SCREEN 2 -->
       <section id="screenLoad" class="screen">
         <div class="loaderWrap">
+          <div class="loadPhotoFrame">
+            <img id="loadPhoto" src="assets/final1.png" alt="Nous - loading">
+          </div>
+
           <div class="loaderHeart"></div>
-          <div class="bar" aria-label="barre de chargement"><i id="barFill"></i></div>
+
+          <div class="bar"><i id="barFill"></i></div>
           <div class="percent"><span id="pct">0</span>%</div>
-          <div class="loadingText" id="loadingText">Chargement de l’amour en cours… 💘</div>
+          <div class="loadingText" id="loadingText">Réservation de la table au NŪ… 🍽️✨</div>
         </div>
       </section>
 
       <!-- SCREEN 3 -->
       <section id="screenDone" class="screen">
-        <div class="bigHeartGlow">
-          <div class="glowPulse"></div>
+        <div class="finalGrid">
+          <div class="finalText">
+            <div class="bigHeart"><div class="glow"></div></div>
+            <h1>Yeees&nbsp;!</h1>
+            <div class="subtitle">Je savais que tu allais dire oui 💞</div>
+            <p class="loveLine">Je t’aime ma Léno ❤️</p>
+          </div>
+
+          <!-- Polaroids on the right (choose your two favorites here) -->
+          <div class="polaroidStack" aria-label="Polaroids">
+            <img class="polaroidImg tilt1" src="assets/final9.png" alt="Nous - polaroid 1">
+            <img class="polaroidImg tilt2" src="assets/final2.png" alt="Nous - polaroid 2">
+          </div>
         </div>
-        <h1>Yeees&nbsp;!</h1>
-        <div class="subtitle">Je savais que tu allais dire oui 💞</div>
-        <p class="loveLine">Je t’aime ma Léno ❤️</p>
       </section>
+
     </div>
   </div>
 
+  <!-- Global "No" button -->
+  <button id="noBtn">Non</button>
+
   <script>
-    // ===== Background hearts (bubble effect) =====
+    // ========= Background hearts =========
     const bg = document.getElementById('bg');
     const heartChars = ["❤","💗","💖","💘","💞","💕"];
+
     function spawnBubble(){
       const el = document.createElement('div');
       el.className = 'bubble-heart';
@@ -368,9 +488,9 @@
       const vw = window.innerWidth;
       const x = Math.random() * vw;
       const size = 14 + Math.random()*22;
-      const drift = (Math.random()*2 - 1) * 120;      // horizontal drift
+      const drift = (Math.random()*2 - 1) * 120;
       const opacity = 0.12 + Math.random()*0.22;
-      const duration = 7 + Math.random()*8;           // seconds
+      const duration = 7 + Math.random()*8;
 
       el.style.left = `${x}px`;
       el.style.fontSize = `${size}px`;
@@ -380,137 +500,179 @@
       el.style.animationDuration = `${duration}s`;
 
       bg.appendChild(el);
-      // cleanup after animation
-      setTimeout(() => el.remove(), duration*1000 + 200);
+      setTimeout(() => el.remove(), duration*1000 + 250);
     }
 
-    // spawn hearts steadily (soft)
     setInterval(spawnBubble, 260);
-    // burst at start
     for(let i=0;i<10;i++) setTimeout(spawnBubble, i*80);
 
-    // ===== Screen transitions =====
+    // ========= Screen switching (smooth fade) =========
     function showScreen(id){
-      const screens = document.querySelectorAll('.screen');
-      screens.forEach(s => {
-        s.classList.remove('show');
-        if(s.classList.contains('active')){
-          // allow fade out
-          setTimeout(() => s.classList.remove('active'), 220);
-        }
-      });
-
-      const target = document.getElementById(id);
-      target.classList.add('active');
-      requestAnimationFrame(() => target.classList.add('show'));
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
     }
 
-    // initial show animation
-    requestAnimationFrame(() => document.getElementById('screenAsk').classList.add('show'));
-
-    // ===== "No" button dodging logic =====
+    // ========= No button logic =========
     const noBtn = document.getElementById('noBtn');
-    const btnZone = document.getElementById('btnZone');
+    const yesBtn = document.getElementById('yesBtn');
+    const hintEl = document.getElementById('hint');
 
-    const noTexts = [
+    // 5 first texts in order (interaction 1..5)
+    const noFirst = [
       "Non",
-      "T’es sûr ?",
+      "T’es sûre ?",
       "Réfléchis mieux…",
       "Allez 😇",
-      "Tu vas cliquer “Oui” 😌",
-      "Essaye encore 😏",
-      "Mais non 😭",
-      "Impossible 🙃",
-      "Team “Oui” 💘"
+      "Tu vas cliquer “Oui” 😌"
     ];
-    let noIndex = 0;
+
+    // Random pool (from the 6th interaction, infinite)
+    const noRandomPool = [
+      "On sait tous les deux que tu vas dire oui 😌",
+      "Le destin a déjà choisi 💘",
+      "Le bouton ‘Oui’ te regarde 👀",
+      "Attention moi aussi je sais bouder…",
+      "Tu veux vraiment me briser le cœur ? 🥺",
+      "Erreur 404 : ‘Non’ introuvable",
+      "Je refuse d’exister sans ton oui 😭",
+      "Clique oui et je te fais un bisou",
+      "Ce bouton est en RTT aujourd’hui",
+      "T’as glissé… vers ‘Oui’ 🙂",
+      "Ça sent le ‘Oui’ à plein nez",
+      "On recommence : tu dis oui ? 😇",
+      "Je suis programmé pour fuir 😎",
+      "Tu veux jouer ? Moi aussi 😈",
+      "Je te laisse une chance… de cliquer Oui",
+      "C’est non… enfin c’est oui",
+      "Je fais semblant d’être un choix",
+      "Bon… ça suffit, clique Oui ma Léno 😘",
+      "Désolé, ce bouton n’est pas cliquable 💅",
+      "Le ‘Non’ est en rupture de stock",
+      "Le ‘Oui’ est juste là 👉"
+    ];
+
+    // Hint: appears after 1st interaction, changes every 5 interactions, then locks
+    const hintSteps = [
+      "PS : le bouton “Non” est un peu timide 😇",
+      "Indice : il aime bien se sauver au dernier moment 😏",
+      "Tu peux essayer… mais il est très sportif 🏃‍♀️💨",
+      "Je crois qu’il a peur de ton doigt 😂",
+      "Plus tu insistes… plus il panique 😭",
+      "Il faut cliquer sur Oui ma Léno… ❤️"
+    ];
+
+    let noInteractions = 0;
+    let lastRandomIdx = -1;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
+    function setNoText(){
+      // interactions are 1-based logically; we increment first, then set text
+      if(noInteractions <= 5){
+        noBtn.textContent = noFirst[noInteractions - 1];
+        return;
+      }
+      // 6+ random forever, avoid immediate repetition
+      let idx;
+      do{
+        idx = (Math.random() * noRandomPool.length) | 0;
+      } while(noRandomPool.length > 1 && idx === lastRandomIdx);
+
+      lastRandomIdx = idx;
+      noBtn.textContent = noRandomPool[idx];
+    }
+
+    function updateHint(){
+      if(noInteractions < 1) return;
+
+      if(!hintEl.classList.contains('show')){
+        hintEl.classList.add('show');
+      }
+
+      // changes every 5 interactions; after step 5 it stays locked
+      const step = clamp(Math.floor((noInteractions - 1) / 5), 0, hintSteps.length - 1);
+      hintEl.textContent = hintSteps[step];
+    }
+
     function moveNoButton(){
-      const zoneRect = btnZone.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
+      noInteractions++;
+      setNoText();
+      updateHint();
 
-      // Choose a new random position inside the zone area, but not too close to the Yes button center.
-      const padding = 8;
-      const maxX = zoneRect.width - btnRect.width - padding*2;
-      const maxY = zoneRect.height - btnRect.height - padding*2;
+      const padding = 16;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
 
-      const yesBtn = document.getElementById('yesBtn');
+      const r = noBtn.getBoundingClientRect();
+      const bw = r.width;
+      const bh = r.height;
+
+      const minX = padding + bw/2;
+      const maxX = vw - padding - bw/2;
+      const minY = padding + bh/2;
+      const maxY = vh - padding - bh/2;
+
       const yesRect = yesBtn.getBoundingClientRect();
-      const yesCx = (yesRect.left + yesRect.right)/2 - zoneRect.left;
-      const yesCy = (yesRect.top + yesRect.bottom)/2 - zoneRect.top;
+      const yesCx = (yesRect.left + yesRect.right)/2;
+      const yesCy = (yesRect.top + yesRect.bottom)/2;
 
       let x, y, tries = 0;
       do{
-        x = padding + Math.random()*maxX;
-        y = padding + Math.random()*maxY;
+        x = minX + Math.random() * (maxX - minX);
+        y = minY + Math.random() * (maxY - minY);
         tries++;
-        const dx = (x + btnRect.width/2) - yesCx;
-        const dy = (y + btnRect.height/2) - yesCy;
-        var dist = Math.hypot(dx, dy);
-      } while(dist < 110 && tries < 18);
+      } while(Math.hypot(x - yesCx, y - yesCy) < 180 && tries < 30);
 
-      // Apply
-      noBtn.style.left = `${x + btnRect.width/2}px`;
-      noBtn.style.top  = `${y + btnRect.height/2}px`;
-      noBtn.style.transform = `translate(-50%, -50%)`;
-
-      // Update text
-      noIndex = clamp(noIndex + 1, 0, noTexts.length-1);
-      noBtn.textContent = noTexts[noIndex];
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top  = `${y}px`;
     }
 
-    // Keep initial position: near the yes button (centered in zone by default)
-    // We'll trigger move when she approaches it.
     function shouldDodge(pointerX, pointerY){
       const r = noBtn.getBoundingClientRect();
       const cx = (r.left + r.right)/2;
       const cy = (r.top + r.bottom)/2;
-      const dist = Math.hypot(pointerX - cx, pointerY - cy);
-      return dist < 90; // dodge radius
+      return Math.hypot(pointerX - cx, pointerY - cy) < 110;
     }
 
-    // Desktop: mouse moves close
+    // Desktop proximity dodge
     window.addEventListener('mousemove', (e) => {
       if(document.getElementById('screenAsk').classList.contains('active')){
-        if(shouldDodge(e.clientX, e.clientY)){
-          moveNoButton();
-        }
+        if(shouldDodge(e.clientX, e.clientY)) moveNoButton();
       }
-    }, { passive: true });
+    }, { passive:true });
 
-    // Mobile: touch near it (or touching it)
+    // Mobile touch
     window.addEventListener('touchstart', (e) => {
       if(!document.getElementById('screenAsk').classList.contains('active')) return;
       const t = e.touches[0];
-      if(!t) return;
-      if(shouldDodge(t.clientX, t.clientY)){
-        moveNoButton();
-      }
-    }, { passive: true });
+      if(t && shouldDodge(t.clientX, t.clientY)) moveNoButton();
+    }, { passive:true });
 
-    // If they manage to hover it directly (rare), also dodge:
+    // Direct hover/click
     noBtn.addEventListener('mouseenter', () => {
-      if(document.getElementById('screenAsk').classList.contains('active')){
-        moveNoButton();
-      }
+      if(document.getElementById('screenAsk').classList.contains('active')) moveNoButton();
     });
-
-    // Prevent click on "No"
     noBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+      if(document.getElementById('screenAsk').classList.contains('active')) moveNoButton();
+    });
+
+    // Place it once on load
+    window.addEventListener('load', () => {
+      // set initial text & move once so it's not perfectly centered
+      noInteractions = 0;
+      noBtn.textContent = "Non";
       moveNoButton();
     });
 
-    // ===== Yes click => Loading => Final =====
-    const yesBtn = document.getElementById('yesBtn');
+    // ========= Loading (smoother + longer + fade text + slideshow) =========
     const barFill = document.getElementById('barFill');
     const pct = document.getElementById('pct');
     const loadingText = document.getElementById('loadingText');
 
     const loadingPhrases = [
+      "Réservation de la table au NŪ… 🍽️✨",
       "Chargement de l’amour en cours… 💘",
       "Préparation des sentiments… 💞",
       "Assemblage des bisous… 😘",
@@ -519,59 +681,93 @@
       "Mon amour… ❤️"
     ];
 
+    function easeInOutCubic(t){
+      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+    }
+
+    function setLoadingPhrase(i){
+      loadingText.classList.add('fadeOut');
+      setTimeout(() => {
+        loadingText.textContent = loadingPhrases[i];
+        loadingText.classList.remove('fadeOut');
+      }, 240);
+    }
+
+    // Slideshow images during loading (you can reorder if you want)
+    const loadPhotos = [
+      "assets/final1.png",
+      "assets/final3.png",
+      "assets/final4.png",
+      "assets/final5.png",
+      "assets/final6.png",
+      "assets/final7.png",
+      "assets/final8.png"
+    ];
+
+    function startLoadingSlideshow(totalMs){
+      const img = document.getElementById("loadPhoto");
+      if(!img || loadPhotos.length === 0) return null;
+
+      let i = 0;
+      img.src = loadPhotos[0];
+
+      const stepMs = Math.max(700, Math.floor(totalMs / Math.max(loadPhotos.length, 5)));
+
+      const timer = setInterval(() => {
+        i = (i + 1) % loadPhotos.length;
+        img.classList.add("fade");
+        setTimeout(() => {
+          img.src = loadPhotos[i];
+          img.classList.remove("fade");
+        }, 220);
+      }, stepMs);
+
+      return timer;
+    }
+
     function runLoading(){
+      // Hide No button during load & final
+      noBtn.style.opacity = '0';
+      noBtn.style.pointerEvents = 'none';
+
       showScreen('screenLoad');
 
-      const totalMs = 4800; // ~4.8s
+      const totalMs = 5800; // +1s, smooth
+      const slideTimer = startLoadingSlideshow(totalMs);
+
       const start = performance.now();
       let phraseIndex = 0;
       loadingText.textContent = loadingPhrases[0];
 
       const phraseTimer = setInterval(() => {
         phraseIndex = Math.min(phraseIndex + 1, loadingPhrases.length - 1);
-        loadingText.textContent = loadingPhrases[phraseIndex];
-      }, 900);
+        setLoadingPhrase(phraseIndex);
+      }, 950);
 
       function tick(now){
-        const t = clamp((now - start) / totalMs, 0, 1);
-        const p = Math.round(t * 100);
+        const raw = clamp((now - start) / totalMs, 0, 1);
+        const eased = easeInOutCubic(raw);
+
+        const p = Math.round(eased * 100);
         pct.textContent = p;
         barFill.style.width = `${p}%`;
 
-        if(t < 1){
+        if(raw < 1){
           requestAnimationFrame(tick);
         } else {
           clearInterval(phraseTimer);
-          setTimeout(() => showScreen('screenDone'), 250);
+          if(slideTimer) clearInterval(slideTimer);
+
+          setTimeout(() => {
+            showScreen('screenDone');
+          }, 420);
         }
       }
+
       requestAnimationFrame(tick);
     }
 
-    yesBtn.addEventListener('click', () => {
-      runLoading();
-    });
-
-    // Ensure "No" button starts beside yes (nice on all widths)
-    // Place it initially to the right of Yes within zone if possible
-    function placeNoNearYes(){
-      const zoneRect = btnZone.getBoundingClientRect();
-      const yesRect = yesBtn.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
-
-      const yesCx = (yesRect.left + yesRect.right)/2 - zoneRect.left;
-      const yesCy = (yesRect.top + yesRect.bottom)/2 - zoneRect.top;
-
-      const x = clamp(yesCx + 150, btnRect.width/2 + 8, zoneRect.width - btnRect.width/2 - 8);
-      const y = clamp(yesCy, btnRect.height/2 + 8, zoneRect.height - btnRect.height/2 - 8);
-
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top  = `${y}px`;
-      noBtn.style.transform = `translate(-50%, -50%)`;
-    }
-
-    window.addEventListener('load', placeNoNearYes);
-    window.addEventListener('resize', placeNoNearYes);
+    yesBtn.addEventListener('click', runLoading);
   </script>
 </body>
 </html>
