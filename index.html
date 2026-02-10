@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Valentine 💘</title>
+  <style>
+    :root{
+      --bg: #fff8fb;
+      --text: #2b2b2b;
+      --muted: #6b6b6b;
+      --pink: #ff4d79;
+      --pink2: #ff2f6b;
+      --btn: #ff4d79;
+      --btnText: #ffffff;
+      --shadow: 0 12px 30px rgba(255, 77, 121, .22);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 50% 20%, #fff 0%, var(--bg) 55%, #ffe8f0 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* Background hearts layer */
+    #bg{
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .bubble-heart{
+      position: absolute;
+      bottom: -60px;
+      left: 0;
+      font-size: 18px;
+      opacity: .18;
+      filter: blur(.0px);
+      transform: translate3d(0,0,0);
+      animation: floatUp linear forwards;
+      will-change: transform, opacity;
+      text-shadow: 0 10px 25px rgba(255, 77, 121, .2);
+    }
+    @keyframes floatUp{
+      0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0; }
+      10%  { opacity: var(--o, .22); }
+      90%  { opacity: var(--o, .22); }
+      100% { transform: translate3d(var(--dx, 0px), -120vh, 0) scale(var(--s, 1)); opacity: 0; }
+    }
+
+    /* Main layout */
+    .stage{
+      position: relative;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card{
+      width: min(720px, 92vw);
+      text-align: center;
+      padding: 34px 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.55);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.07);
+      border: 1px solid rgba(255,255,255,.55);
+    }
+
+    .hearts-top{
+      display:flex;
+      gap: 10px;
+      justify-content:center;
+      align-items:center;
+      margin-bottom: 8px;
+      height: 46px;
+    }
+
+    .heart{
+      width: 30px;
+      height: 30px;
+      position: relative;
+      transform: rotate(-45deg);
+      background: var(--pink);
+      border-radius: 6px;
+      animation: beat 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 10px 20px rgba(255,77,121,.25));
+    }
+    .heart::before,
+    .heart::after{
+      content:"";
+      position:absolute;
+      width: 30px;
+      height: 30px;
+      background: var(--pink);
+      border-radius: 50%;
+    }
+    .heart::before{ top:-15px; left:0; }
+    .heart::after { left:15px; top:0; }
+
+    .heart.small{
+      width: 20px; height: 20px;
+      opacity: .95;
+      animation-duration: 1.35s;
+    }
+    .heart.small::before,
+    .heart.small::after{
+      width: 20px; height: 20px;
+    }
+    .heart.small::before{ top:-10px; }
+    .heart.small::after{ left:10px; }
+
+    @keyframes beat{
+      0%, 100% { transform: rotate(-45deg) scale(1); }
+      18% { transform: rotate(-45deg) scale(1.08); }
+      36% { transform: rotate(-45deg) scale(0.98); }
+      54% { transform: rotate(-45deg) scale(1.10); }
+      72% { transform: rotate(-45deg) scale(1.00); }
+    }
+
+    h1{
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.15;
+      margin: 10px 0 18px;
+      letter-spacing: .2px;
+    }
+
+    .name{
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--pink2), #ff7aa2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      white-space: nowrap;
+    }
+
+    .buttons{
+      display:flex;
+      gap: 12px;
+      justify-content:center;
+      margin-top: 18px;
+      position: relative;
+      height: 58px;
+    }
+
+    button{
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .22s ease, background .22s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #yesBtn{
+      background: var(--btn);
+      color: var(--btnText);
+      box-shadow: var(--shadow);
+      min-width: 120px;
+    }
+    #yesBtn:hover{ transform: translateY(-1px); }
+    #yesBtn:active{ transform: translateY(1px) scale(.99); }
+
+    /* The "No" button is absolutely positioned inside a larger click area */
+    #noBtn{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 77, 121, .10);
+      color: var(--pink2);
+      border: 1px solid rgba(255, 77, 121, .25);
+      min-width: 120px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.05);
+      backdrop-filter: blur(6px);
+    }
+    #noBtn:hover{ transform: translate(-50%, -50%) scale(1.02); }
+
+    /* Screens */
+    .screen{
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .screen.active{
+      display: block;
+    }
+    .screen.show{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Loading screen */
+    .loaderWrap{
+      display:flex;
+      flex-direction: column;
+      align-items:center;
+      gap: 14px;
+      padding: 8px 0 0;
+    }
+
+    .loaderHeart{
+      width: 28px; height: 28px;
+      transform: rotate(-45deg);
+      background: var(--pink2);
+      border-radius: 6px;
+      filter: drop-shadow(0 10px 25px rgba(255,47,107,.22));
+      animation: beat 1.15s ease-in-out infinite;
+    }
+    .loaderHeart::before, .loaderHeart::after{
+      content:"";
+      position:absolute;
+      width: 28px; height: 28px;
+      background: var(--pink2);
+      border-radius: 50%;
+    }
+    .loaderHeart::before{ top:-14px; left:0; }
+    .loaderHeart::after { left:14px; top:0; }
+
+    .bar{
+      width: min(380px, 78vw);
+      height: 10px;
+      background: rgba(255, 77, 121, .15);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 77, 121, .18);
+    }
+    .bar > i{
+      display:block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--pink2), #ff7aa2);
+      border-radius: 999px;
+      transition: width .12s linear;
+    }
+
+    .percent{
+      font-weight: 900;
+      color: var(--pink2);
+    }
+    .loadingText{
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    /* Final screen */
+    .bigHeartGlow{
+      margin: 6px auto 8px;
+      width: 54px; height: 54px;
+      transform: rotate(-45deg);
+      background: var(--pink2);
+      border-radius: 10px;
+      animation: beat 1.2s ease-in-out infinite;
+      box-shadow: 0 0 0 rgba(255,47,107,.0);
+      filter: drop-shadow(0 18px 35px rgba(255,47,107,.18));
+      position: relative;
+    }
+    .bigHeartGlow::before, .bigHeartGlow::after{
+      content:"";
+      position:absolute;
+      width: 54px; height: 54px;
+      background: var(--pink2);
+      border-radius: 50%;
+    }
+    .bigHeartGlow::before{ top:-27px; left:0; }
+    .bigHeartGlow::after { left:27px; top:0; }
+
+    .glowPulse{
+      position:absolute;
+      inset: -18px;
+      border-radius: 16px;
+      background: radial-gradient(circle, rgba(255,47,107,.25), rgba(255,47,107,0) 62%);
+      animation: glow 1.4s ease-in-out infinite;
+      transform: rotate(45deg);
+      pointer-events:none;
+    }
+    @keyframes glow{
+      0%, 100% { opacity: .55; transform: rotate(45deg) scale(.98); }
+      50%      { opacity: .85; transform: rotate(45deg) scale(1.05); }
+    }
+
+    .subtitle{
+      margin: 8px 0 6px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .loveLine{
+      margin: 0;
+      font-weight: 900;
+    }
+
+    /* Small helper */
+    .hint{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(0,0,0,.35);
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="bg" aria-hidden="true"></div>
+
+  <div class="stage">
+    <div class="card">
+      <!-- SCREEN 1 -->
+      <section id="screenAsk" class="screen active">
+        <div class="hearts-top">
+          <div class="heart"></div>
+          <div class="heart small"></div>
+        </div>
+
+        <h1>
+          <span class="name">Lénora Deparis Verhoeven</span>,<br/>
+          veux-tu être ma Valentine ?
+        </h1>
+
+        <div class="buttons" id="btnZone">
+          <button id="yesBtn">Oui ! 💞</button>
+          <button id="noBtn">Non</button>
+        </div>
+
+        <div class="hint">PS : le bouton “Non” est… un peu timide 😇</div>
+      </section>
+
+      <!-- SCREEN 2 -->
+      <section id="screenLoad" class="screen">
+        <div class="loaderWrap">
+          <div class="loaderHeart"></div>
+          <div class="bar" aria-label="barre de chargement"><i id="barFill"></i></div>
+          <div class="percent"><span id="pct">0</span>%</div>
+          <div class="loadingText" id="loadingText">Chargement de l’amour en cours… 💘</div>
+        </div>
+      </section>
+
+      <!-- SCREEN 3 -->
+      <section id="screenDone" class="screen">
+        <div class="bigHeartGlow">
+          <div class="glowPulse"></div>
+        </div>
+        <h1>Yeees&nbsp;!</h1>
+        <div class="subtitle">Je savais que tu allais dire oui 💞</div>
+        <p class="loveLine">Je t’aime ma Léno ❤️</p>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ===== Background hearts (bubble effect) =====
+    const bg = document.getElementById('bg');
+    const heartChars = ["❤","💗","💖","💘","💞","💕"];
+    function spawnBubble(){
+      const el = document.createElement('div');
+      el.className = 'bubble-heart';
+      el.textContent = heartChars[(Math.random()*heartChars.length)|0];
+
+      const vw = window.innerWidth;
+      const x = Math.random() * vw;
+      const size = 14 + Math.random()*22;
+      const drift = (Math.random()*2 - 1) * 120;      // horizontal drift
+      const opacity = 0.12 + Math.random()*0.22;
+      const duration = 7 + Math.random()*8;           // seconds
+
+      el.style.left = `${x}px`;
+      el.style.fontSize = `${size}px`;
+      el.style.setProperty('--dx', `${drift}px`);
+      el.style.setProperty('--o', opacity.toFixed(2));
+      el.style.setProperty('--s', (0.85 + Math.random()*0.6).toFixed(2));
+      el.style.animationDuration = `${duration}s`;
+
+      bg.appendChild(el);
+      // cleanup after animation
+      setTimeout(() => el.remove(), duration*1000 + 200);
+    }
+
+    // spawn hearts steadily (soft)
+    setInterval(spawnBubble, 260);
+    // burst at start
+    for(let i=0;i<10;i++) setTimeout(spawnBubble, i*80);
+
+    // ===== Screen transitions =====
+    function showScreen(id){
+      const screens = document.querySelectorAll('.screen');
+      screens.forEach(s => {
+        s.classList.remove('show');
+        if(s.classList.contains('active')){
+          // allow fade out
+          setTimeout(() => s.classList.remove('active'), 220);
+        }
+      });
+
+      const target = document.getElementById(id);
+      target.classList.add('active');
+      requestAnimationFrame(() => target.classList.add('show'));
+    }
+
+    // initial show animation
+    requestAnimationFrame(() => document.getElementById('screenAsk').classList.add('show'));
+
+    // ===== "No" button dodging logic =====
+    const noBtn = document.getElementById('noBtn');
+    const btnZone = document.getElementById('btnZone');
+
+    const noTexts = [
+      "Non",
+      "T’es sûr ?",
+      "Réfléchis mieux…",
+      "Allez 😇",
+      "Tu vas cliquer “Oui” 😌",
+      "Essaye encore 😏",
+      "Mais non 😭",
+      "Impossible 🙃",
+      "Team “Oui” 💘"
+    ];
+    let noIndex = 0;
+
+    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+    function moveNoButton(){
+      const zoneRect = btnZone.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // Choose a new random position inside the zone area, but not too close to the Yes button center.
+      const padding = 8;
+      const maxX = zoneRect.width - btnRect.width - padding*2;
+      const maxY = zoneRect.height - btnRect.height - padding*2;
+
+      const yesBtn = document.getElementById('yesBtn');
+      const yesRect = yesBtn.getBoundingClientRect();
+      const yesCx = (yesRect.left + yesRect.right)/2 - zoneRect.left;
+      const yesCy = (yesRect.top + yesRect.bottom)/2 - zoneRect.top;
+
+      let x, y, tries = 0;
+      do{
+        x = padding + Math.random()*maxX;
+        y = padding + Math.random()*maxY;
+        tries++;
+        const dx = (x + btnRect.width/2) - yesCx;
+        const dy = (y + btnRect.height/2) - yesCy;
+        var dist = Math.hypot(dx, dy);
+      } while(dist < 110 && tries < 18);
+
+      // Apply
+      noBtn.style.left = `${x + btnRect.width/2}px`;
+      noBtn.style.top  = `${y + btnRect.height/2}px`;
+      noBtn.style.transform = `translate(-50%, -50%)`;
+
+      // Update text
+      noIndex = clamp(noIndex + 1, 0, noTexts.length-1);
+      noBtn.textContent = noTexts[noIndex];
+    }
+
+    // Keep initial position: near the yes button (centered in zone by default)
+    // We'll trigger move when she approaches it.
+    function shouldDodge(pointerX, pointerY){
+      const r = noBtn.getBoundingClientRect();
+      const cx = (r.left + r.right)/2;
+      const cy = (r.top + r.bottom)/2;
+      const dist = Math.hypot(pointerX - cx, pointerY - cy);
+      return dist < 90; // dodge radius
+    }
+
+    // Desktop: mouse moves close
+    window.addEventListener('mousemove', (e) => {
+      if(document.getElementById('screenAsk').classList.contains('active')){
+        if(shouldDodge(e.clientX, e.clientY)){
+          moveNoButton();
+        }
+      }
+    }, { passive: true });
+
+    // Mobile: touch near it (or touching it)
+    window.addEventListener('touchstart', (e) => {
+      if(!document.getElementById('screenAsk').classList.contains('active')) return;
+      const t = e.touches[0];
+      if(!t) return;
+      if(shouldDodge(t.clientX, t.clientY)){
+        moveNoButton();
+      }
+    }, { passive: true });
+
+    // If they manage to hover it directly (rare), also dodge:
+    noBtn.addEventListener('mouseenter', () => {
+      if(document.getElementById('screenAsk').classList.contains('active')){
+        moveNoButton();
+      }
+    });
+
+    // Prevent click on "No"
+    noBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      moveNoButton();
+    });
+
+    // ===== Yes click => Loading => Final =====
+    const yesBtn = document.getElementById('yesBtn');
+    const barFill = document.getElementById('barFill');
+    const pct = document.getElementById('pct');
+    const loadingText = document.getElementById('loadingText');
+
+    const loadingPhrases = [
+      "Chargement de l’amour en cours… 💘",
+      "Préparation des sentiments… 💞",
+      "Assemblage des bisous… 😘",
+      "Polissage de la bague… 💍",
+      "Ajout de câlins illimités… 🫶",
+      "Mon amour… ❤️"
+    ];
+
+    function runLoading(){
+      showScreen('screenLoad');
+
+      const totalMs = 4800; // ~4.8s
+      const start = performance.now();
+      let phraseIndex = 0;
+      loadingText.textContent = loadingPhrases[0];
+
+      const phraseTimer = setInterval(() => {
+        phraseIndex = Math.min(phraseIndex + 1, loadingPhrases.length - 1);
+        loadingText.textContent = loadingPhrases[phraseIndex];
+      }, 900);
+
+      function tick(now){
+        const t = clamp((now - start) / totalMs, 0, 1);
+        const p = Math.round(t * 100);
+        pct.textContent = p;
+        barFill.style.width = `${p}%`;
+
+        if(t < 1){
+          requestAnimationFrame(tick);
+        } else {
+          clearInterval(phraseTimer);
+          setTimeout(() => showScreen('screenDone'), 250);
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    yesBtn.addEventListener('click', () => {
+      runLoading();
+    });
+
+    // Ensure "No" button starts beside yes (nice on all widths)
+    // Place it initially to the right of Yes within zone if possible
+    function placeNoNearYes(){
+      const zoneRect = btnZone.getBoundingClientRect();
+      const yesRect = yesBtn.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const yesCx = (yesRect.left + yesRect.right)/2 - zoneRect.left;
+      const yesCy = (yesRect.top + yesRect.bottom)/2 - zoneRect.top;
+
+      const x = clamp(yesCx + 150, btnRect.width/2 + 8, zoneRect.width - btnRect.width/2 - 8);
+      const y = clamp(yesCy, btnRect.height/2 + 8, zoneRect.height - btnRect.height/2 - 8);
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top  = `${y}px`;
+      noBtn.style.transform = `translate(-50%, -50%)`;
+    }
+
+    window.addEventListener('load', placeNoNearYes);
+    window.addEventListener('resize', placeNoNearYes);
+  </script>
+</body>
+</html>
