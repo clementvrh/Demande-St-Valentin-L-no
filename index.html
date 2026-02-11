@@ -15,35 +15,32 @@
       --shadow: 0 12px 30px rgba(255, 77, 121, .22);
       --ease: cubic-bezier(.22,.61,.36,1);
     }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
 
     body{
       margin:0;
       font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background: radial-gradient(1200px 800px at 50% 20%, #fff 0%, var(--bg) 55%, #ffe8f0 100%);
       color: var(--text);
-      overflow: hidden;
-      cursor: none !important;
+      overflow:hidden;
+      cursor:none !important;
     }
-    button, a, input, label, textarea, select{ cursor: none !important; }
+    button, a, input, label, textarea, select{ cursor:none !important; }
 
     @media (hover: none) and (pointer: coarse){
-      body{ cursor: auto !important; }
+      body{ cursor:auto !important; }
       #cursorDot{ display:none !important; }
       button, a, input, label, textarea, select{ cursor:auto !important; }
     }
 
-    /* custom cursor */
     #cursorDot{
-      position: fixed;
-      left:0; top:0;
+      position:fixed; left:0; top:0;
       width:10px; height:10px;
       border-radius:999px;
       background: radial-gradient(circle at 35% 35%, #ffd1df 0%, var(--pink) 45%, var(--pink2) 100%);
       box-shadow: 0 0 16px rgba(255,47,107,.30), 0 0 30px rgba(255,47,107,.16);
-      transform: translate(-50%, -50%);
+      transform: translate(-50%,-50%);
       pointer-events:none;
       z-index:9999;
       opacity:0;
@@ -52,17 +49,17 @@
     }
 
     /* BG hearts */
-    #bg{ position: fixed; inset:0; overflow:hidden; pointer-events:none; }
+    #bg{ position:fixed; inset:0; overflow:hidden; pointer-events:none; }
     .bubble-heart{
       position:absolute; bottom:-60px; left:0;
-      font-size:18px; opacity:.18;
+      opacity:.18;
       animation: floatUp linear forwards;
       will-change: transform, opacity;
       text-shadow: 0 10px 25px rgba(255,77,121,.22);
       filter: drop-shadow(0 10px 20px rgba(255,77,121,.16));
     }
     @keyframes floatUp{
-      0% { transform: translate3d(0,0,0) scale(1); opacity:0; }
+      0%{ transform: translate3d(0,0,0) scale(1); opacity:0; }
       10%{ opacity: var(--o,.22); }
       90%{ opacity: var(--o,.22); }
       100%{ transform: translate3d(var(--dx,0px), -120vh, 0) scale(var(--s,1)); opacity:0; }
@@ -88,7 +85,6 @@
       overflow: visible;
       transition: opacity .35s ease;
     }
-    /* We hide the big card visual ONLY during loading screen */
     .card.loadingMode{
       background: transparent;
       border-color: transparent;
@@ -111,7 +107,6 @@
       pointer-events:auto;
     }
 
-    /* top hearts */
     .hearts-top{
       display:flex; gap:10px;
       justify-content:center; align-items:center;
@@ -132,7 +127,6 @@
       width:32px; height:32px;
       background: var(--pink);
       border-radius:50%;
-      filter: drop-shadow(0 0 12px rgba(255,77,121,.18));
     }
     .heart::before{ top:-16px; left:0; }
     .heart::after{ left:16px; top:0; }
@@ -140,7 +134,6 @@
     .heart.small::before,.heart.small::after{ width:22px; height:22px; }
     .heart.small::before{ top:-11px; }
     .heart.small::after{ left:11px; }
-
     @keyframes beat{
       0%,100%{ transform: rotate(-45deg) scale(1); }
       18%{ transform: rotate(-45deg) scale(1.08); }
@@ -153,6 +146,7 @@
       font-size: clamp(26px, 3.2vw, 40px);
       line-height:1.15;
       margin:10px 0 18px;
+      min-height: 96px; /* keeps layout stable during typewriter */
     }
     .name{
       font-weight:950;
@@ -195,16 +189,15 @@
       color: var(--pink2);
       border: 1px solid rgba(255,77,121,.25);
       min-width:130px;
-      max-width: 240px;               /* IMPORTANT: prevents impossible clamping */
-      overflow: hidden;
-      text-overflow: ellipsis;
+      max-width: 240px;
+      overflow:hidden;
+      text-overflow:ellipsis;
       box-shadow: 0 10px 24px rgba(0,0,0,.06);
       backdrop-filter: blur(8px);
     }
     #noBtn.fixedRoam{
       position: fixed;
-      left: 0;
-      top: 0;
+      left: 0; top: 0;
       transform: none;
       z-index: 50;
       transition: left .18s var(--ease), top .18s var(--ease), opacity .25s ease;
@@ -241,7 +234,7 @@
       }
     }
 
-    /* LOADING: photo above + small panel only */
+    /* LOADING */
     .loadStage{
       height:100%;
       display:flex;
@@ -271,13 +264,11 @@
       box-shadow: 0 18px 50px rgba(0,0,0,.06);
       padding: 26px 18px 22px;
     }
-
     .loaderHeart{
       width:30px; height:30px;
       transform: rotate(-45deg);
       background: var(--pink2);
       border-radius:7px;
-      filter: drop-shadow(0 12px 25px rgba(255,47,107,.18));
       animation: beat 1.15s ease-in-out infinite;
       position:relative;
       margin: 0 auto 10px;
@@ -329,27 +320,12 @@
       margin: 0 auto;
       padding-top: 10px;
     }
-
-    .finalTitle{
-      font-size: clamp(44px, 4.6vw, 60px);
-      margin: 0;
-      letter-spacing: .2px;
-    }
-    .finalSub{
-      margin: 0;
-      color: rgba(0,0,0,.55);
-      font-weight: 900;
-      font-size: 20px;
-    }
-    .finalLove{
-      margin: 0;
-      font-weight: 950;
-      font-size: 22px;
-    }
+    .finalTitle{ font-size: clamp(44px, 4.6vw, 60px); margin:0; }
+    .finalSub{ margin:0; color: rgba(0,0,0,.55); font-weight:900; font-size:20px; }
+    .finalLove{ margin:0; font-weight:950; font-size:22px; }
 
     .finalHeartWrap{
-      width: 100px;
-      height: 100px;
+      width: 100px; height: 100px;
       animation: finalBeat 1.25s ease-in-out infinite;
       filter: drop-shadow(0 16px 34px rgba(255,47,107,.22));
     }
@@ -358,10 +334,9 @@
       18%{ transform: scale(1.06); }
       36%{ transform: scale(.99); }
       54%{ transform: scale(1.09); }
-      72%{ transform: scale(1.00); }
+      72%{ transform: scale(1); }
     }
 
-    /* FINAL photos */
     .finalPolaroids{
       position:absolute;
       right: -120px;
@@ -378,20 +353,18 @@
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.14));
       opacity: 0;
       transition: opacity .5s ease, transform .5s ease;
-      will-change: opacity, transform;
     }
-    .slot.show{ opacity: 1; }
+    .slot.show{ opacity:1; }
 
-    /* pos1 unchanged */
     .slot.pos1{ right:0; top:-6px; transform: rotate(6deg) translateY(6px); }
     .slot.pos1.show{ transform: rotate(6deg) translateY(0); }
 
-    /* pos2: slightly more right so it touches only bottom-right corner */
-    .slot.pos2{ right:-8px; top:235px; transform: rotate(-7deg) translateY(6px); }
+    /* pos2 slightly right and lower */
+    .slot.pos2{ right:-16px; top:245px; transform: rotate(-7deg) translateY(6px); }
     .slot.pos2.show{ transform: rotate(-7deg) translateY(0); }
 
-    /* pos3: shifted right, between pos1 and pos2 */
-    .slot.pos3{ right:-18px; top:130px; transform: rotate(3deg) translateY(6px); }
+    /* pos3 more to the right, between pos1 and pos2 */
+    .slot.pos3{ right:-26px; top:145px; transform: rotate(3deg) translateY(6px); }
     .slot.pos3.show{ transform: rotate(3deg) translateY(0); }
 
     @media (max-width: 980px){
@@ -431,12 +404,9 @@
           <div class="heart small"></div>
         </div>
 
-        <h1 id="questionTitle">
-          <span class="name">Lénora Deparis Verhoeven</span>,<br/>
-          veux-tu être ma Valentine ?
-        </h1>
+        <h1 id="questionTitle"></h1>
 
-        <div class="buttons" id="btnRow">
+        <div class="buttons">
           <button id="yesBtn">Oui ! 💞</button>
           <button id="noBtn">Non</button>
         </div>
@@ -461,7 +431,7 @@
       <section id="screenDone" class="screen">
         <div class="finalText">
           <div class="finalHeartWrap" aria-hidden="true">
-            <!-- HEART: rounder / less skinny -->
+            <!-- heart: rounder -->
             <svg viewBox="0 0 120 120" width="100" height="100">
               <defs>
                 <radialGradient id="gMain" cx="35%" cy="28%" r="82%">
@@ -500,31 +470,30 @@
                 </filter>
               </defs>
 
-              <!-- rounder heart path -->
               <path filter="url(#glow)" fill="url(#gMain)"
-                d="M60 108
-                   C60 108, 14 80, 14 46
-                   C14 25, 31 14, 47 14
-                   C56 14, 60 20, 60 20
-                   C60 20, 64 14, 73 14
-                   C89 14, 106 25, 106 46
-                   C106 80, 60 108, 60 108 Z" />
+                d="M60 109
+                   C60 109, 12 82, 12 46
+                   C12 24, 30 13, 47 13
+                   C57 13, 60 19, 60 19
+                   C60 19, 63 13, 73 13
+                   C90 13, 108 24, 108 46
+                   C108 82, 60 109, 60 109 Z" />
               <path filter="url(#inner)" fill="url(#gMain)"
-                d="M60 108
-                   C60 108, 14 80, 14 46
-                   C14 25, 31 14, 47 14
-                   C56 14, 60 20, 60 20
-                   C60 20, 64 14, 73 14
-                   C89 14, 106 25, 106 46
-                   C106 80, 60 108, 60 108 Z" />
+                d="M60 109
+                   C60 109, 12 82, 12 46
+                   C12 24, 30 13, 47 13
+                   C57 13, 60 19, 60 19
+                   C60 19, 63 13, 73 13
+                   C90 13, 108 24, 108 46
+                   C108 82, 60 109, 60 109 Z" />
               <path fill="url(#gHi)" opacity="0.55"
-                d="M60 108
-                   C60 108, 14 80, 14 46
-                   C14 25, 31 14, 47 14
-                   C56 14, 60 20, 60 20
-                   C60 20, 64 14, 73 14
-                   C89 14, 106 25, 106 46
-                   C106 80, 60 108, 60 108 Z" />
+                d="M60 109
+                   C60 109, 12 82, 12 46
+                   C12 24, 30 13, 47 13
+                   C57 13, 60 19, 60 19
+                   C60 19, 63 13, 73 13
+                   C90 13, 108 24, 108 46
+                   C108 82, 60 109, 60 109 Z" />
             </svg>
           </div>
 
@@ -560,18 +529,15 @@
 
     addEventListener('mousemove', (e) => {
       targetX = e.clientX; targetY = e.clientY;
-      if(!cursorVisible){
-        cursorVisible = true;
-        cursorDot.style.opacity = '1';
-      }
+      if(!cursorVisible){ cursorVisible = true; cursorDot.style.opacity='1'; }
     }, {passive:true});
 
     addEventListener('mouseleave', () => {
       cursorVisible = false;
-      cursorDot.style.opacity = '0';
+      cursorDot.style.opacity='0';
     });
 
-    // ===== background hearts =====
+    // ===== BG hearts =====
     const bg = document.getElementById('bg');
     const heartChars = ["❤","💗","💖","💘","💞","💕"];
     function spawnBubble(){
@@ -598,14 +564,43 @@
     setInterval(spawnBubble, 260);
     for(let i=0;i<10;i++) setTimeout(spawnBubble, i*80);
 
-    // ===== screens =====
+    // ===== Screens =====
     const card = document.getElementById('card');
     function showScreen(id){
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    // ===== NO button rules =====
+    // ===== Typewriter (smooth) for first screen =====
+    const titleEl = document.getElementById('questionTitle');
+    const fullTitle = `<span class="name">Lénora Deparis Verhoeven</span>,<br/>veux-tu être ma Valentine ?`;
+
+    function typewriterHTML(el, html, msPerChar = 18){
+      // We type plain text, but keep <span> formatting by splitting into tokens.
+      // Simple approach: render without span during typing, then swap to final HTML at end.
+      const plain = "Lénora Deparis Verhoeven,\nveux-tu être ma Valentine ?";
+      el.textContent = "";
+      let i = 0;
+
+      const step = () => {
+        i++;
+        const shown = plain.slice(0, i);
+        el.textContent = shown;
+        el.innerHTML = el.textContent.replace("\n","<br/>");
+        if(i < plain.length){
+          // slight randomness for a smooth feel
+          const jitter = (Math.random()*10)|0;
+          setTimeout(step, msPerChar + jitter);
+        } else {
+          // snap to final rich HTML
+          el.innerHTML = html;
+        }
+      };
+      setTimeout(step, 200);
+    }
+    typewriterHTML(titleEl, fullTitle, 16);
+
+    // ===== No button logic: place ONLY in allowed zones around card =====
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
     const hintEl = document.getElementById('hint');
@@ -649,16 +644,16 @@
     let lastMoveAt = 0;
 
     const COOLDOWN_MS = 260;
-    const DODGE_RADIUS = 95;
+    const NEAR_RADIUS = 95;
+    const FAR_RADIUS = 140;  // hysteresis: must exit this radius to re-arm
     const PADDING = 12;
+
+    let armed = true; // hysteresis arming
 
     const clamp = (v,min,max) => Math.max(min, Math.min(max, v));
 
     function setNoText(){
-      if(noInteractions <= 5){
-        noBtn.textContent = noFirst[noInteractions - 1];
-        return;
-      }
+      if(noInteractions <= 5){ noBtn.textContent = noFirst[noInteractions - 1]; return; }
       let idx;
       do{ idx = (Math.random() * noRandomPool.length) | 0; }
       while(noRandomPool.length > 1 && idx === lastRandomIdx);
@@ -678,86 +673,87 @@
       roamingEnabled = true;
       noBtn.classList.add('fixedRoam');
       const r = noBtn.getBoundingClientRect();
-      placeNoAt(r.left, r.top);
+      placeNo(r.left, r.top);
     }
 
-    // Forbidden zone: the main card content area (avoid texts)
-    function getForbiddenRect(){
-      const cardRect = card.getBoundingClientRect();
-      // Slightly inset to be safe
+    function getAllowedZones(btnW, btnH){
+      const c = card.getBoundingClientRect();
+
+      // Allowed zones are rectangles around the card (top, bottom, left, right) INSIDE viewport.
+      const zones = [];
+
+      // TOP zone
+      zones.push({
+        x: PADDING,
+        y: PADDING,
+        w: innerWidth - 2*PADDING,
+        h: Math.max(0, c.top - PADDING*2)
+      });
+
+      // BOTTOM zone
+      zones.push({
+        x: PADDING,
+        y: c.bottom + PADDING,
+        w: innerWidth - 2*PADDING,
+        h: Math.max(0, innerHeight - (c.bottom + 2*PADDING))
+      });
+
+      // LEFT zone
+      zones.push({
+        x: PADDING,
+        y: c.top + PADDING,
+        w: Math.max(0, c.left - 2*PADDING),
+        h: Math.max(0, (c.bottom - c.top) - 2*PADDING)
+      });
+
+      // RIGHT zone
+      zones.push({
+        x: c.right + PADDING,
+        y: c.top + PADDING,
+        w: Math.max(0, innerWidth - (c.right + 2*PADDING)),
+        h: Math.max(0, (c.bottom - c.top) - 2*PADDING)
+      });
+
+      // filter zones where button fits
+      return zones
+        .filter(z => z.w >= btnW + PADDING && z.h >= btnH + PADDING)
+        .map(z => ({
+          xMin: z.x,
+          xMax: z.x + z.w - btnW,
+          yMin: z.y,
+          yMax: z.y + z.h - btnH
+        }));
+    }
+
+    function randomPointInZones(zones){
+      // choose zone by area
+      const areas = zones.map(z => (z.xMax - z.xMin) * (z.yMax - z.yMin));
+      const total = areas.reduce((a,b)=>a+b,0);
+      let r = Math.random() * total;
+      let idx = 0;
+      while(r > areas[idx]){ r -= areas[idx]; idx++; }
+      const z = zones[idx];
       return {
-        left: cardRect.left + 10,
-        top: cardRect.top + 10,
-        right: cardRect.right - 10,
-        bottom: cardRect.bottom - 10
+        left: z.xMin + Math.random() * (z.xMax - z.xMin),
+        top:  z.yMin + Math.random() * (z.yMax - z.yMin)
       };
     }
 
-    // Two-pass clamp that guarantees inside viewport, even if width changes
-    function placeNoAt(left, top){
-      // pass 1
-      noBtn.style.left = `${left}px`;
-      noBtn.style.top  = `${top}px`;
+    function placeNo(left, top){
+      // hard clamp into viewport (top-left coords)
+      const r = noBtn.getBoundingClientRect();
+      const bw = r.width, bh = r.height;
+      const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
+      const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
 
-      // pass 2 on next frame with real size
-      requestAnimationFrame(() => {
-        const r = noBtn.getBoundingClientRect();
-        const bw = r.width, bh = r.height;
+      const L = clamp(left, PADDING, maxLeft);
+      const T = clamp(top,  PADDING, maxTop);
 
-        const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
-        const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
-
-        let L = clamp(left, PADDING, maxLeft);
-        let T = clamp(top,  PADDING, maxTop);
-
-        // avoid forbidden zone (card)
-        const f = getForbiddenRect();
-        const proposed = { left: L, top: T, right: L + bw, bottom: T + bh };
-
-        const intersects =
-          proposed.right > f.left &&
-          proposed.left < f.right &&
-          proposed.bottom > f.top &&
-          proposed.top < f.bottom;
-
-        if(intersects){
-          // push it outside the forbidden rect in the closest direction
-          const pushLeft  = f.left - bw - PADDING;
-          const pushRight = f.right + PADDING;
-          const pushTop   = f.top - bh - PADDING;
-          const pushBot   = f.bottom + PADDING;
-
-          // choose nearest valid position
-          const candidates = [
-            {L: clamp(pushLeft,  PADDING, maxLeft),  T},
-            {L: clamp(pushRight, PADDING, maxLeft),  T},
-            {L, T: clamp(pushTop, PADDING, maxTop)},
-            {L, T: clamp(pushBot, PADDING, maxTop)}
-          ];
-
-          let best = {L, T};
-          let bestDist = Infinity;
-          for(const c of candidates){
-            const cL = c.L ?? L;
-            const cT = c.T ?? T;
-            const dx = cL - L;
-            const dy = cT - T;
-            const d = dx*dx + dy*dy;
-            if(d < bestDist){
-              bestDist = d;
-              best = {L: cL, T: cT};
-            }
-          }
-          L = best.L; T = best.T;
-        }
-
-        // final set
-        noBtn.style.left = `${L}px`;
-        noBtn.style.top  = `${T}px`;
-      });
+      noBtn.style.left = `${L}px`;
+      noBtn.style.top  = `${T}px`;
     }
 
-    function moveNoButton(){
+    function moveNo(){
       const now = Date.now();
       if(now - lastMoveAt < COOLDOWN_MS) return;
       lastMoveAt = now;
@@ -767,74 +763,80 @@
       updateHint();
       enableRoaming();
 
-      // compute allowed viewport range (top-left positioning)
-      const r = noBtn.getBoundingClientRect();
-      const bw = r.width, bh = r.height;
+      // after text change, recompute actual size
+      requestAnimationFrame(() => {
+        const r = noBtn.getBoundingClientRect();
+        const bw = r.width, bh = r.height;
 
-      const minLeft = PADDING;
-      const minTop  = PADDING;
-      const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
-      const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
+        const zones = getAllowedZones(bw, bh);
 
-      // avoid YES area
-      const yesR = yesBtn.getBoundingClientRect();
-      const yesCx = (yesR.left + yesR.right)/2;
-      const yesCy = (yesR.top + yesR.bottom)/2;
+        // fallback: if no zone available, just clamp to top-left (still inside screen)
+        let pos;
+        if(zones.length === 0){
+          pos = { left: PADDING, top: PADDING };
+        } else {
+          pos = randomPointInZones(zones);
+        }
 
-      let left = minLeft + Math.random() * (maxLeft - minLeft);
-      let top  = minTop  + Math.random() * (maxTop  - minTop);
+        // avoid YES vicinity (if possible)
+        const yesR = yesBtn.getBoundingClientRect();
+        const yesCx = (yesR.left + yesR.right)/2;
+        const yesCy = (yesR.top + yesR.bottom)/2;
 
-      let tries = 0;
-      while(tries < 40){
-        const cx = left + bw/2;
-        const cy = top  + bh/2;
+        let tries = 0;
+        while(tries < 25){
+          const cx = pos.left + bw/2;
+          const cy = pos.top + bh/2;
+          if(Math.hypot(cx - yesCx, cy - yesCy) >= 220) break;
+          pos = (zones.length ? randomPointInZones(zones) : { left: PADDING, top: PADDING });
+          tries++;
+        }
 
-        const farFromYes = Math.hypot(cx - yesCx, cy - yesCy) >= 200;
-        if(farFromYes) break;
-
-        left = minLeft + Math.random() * (maxLeft - minLeft);
-        top  = minTop  + Math.random() * (maxTop  - minTop);
-        tries++;
-      }
-
-      placeNoAt(left, top);
+        placeNo(pos.left, pos.top);
+      });
     }
 
-    function pointerNearNo(x, y){
+    function distToNo(x,y){
       const r = noBtn.getBoundingClientRect();
       const cx = (r.left + r.right)/2;
       const cy = (r.top + r.bottom)/2;
-      return Math.hypot(x - cx, y - cy) < DODGE_RADIUS;
+      return Math.hypot(x - cx, y - cy);
     }
 
     addEventListener('mousemove', (e) => {
       if(!document.getElementById('screenAsk').classList.contains('active')) return;
-      if(pointerNearNo(e.clientX, e.clientY)) moveNoButton();
+      const d = distToNo(e.clientX, e.clientY);
+
+      if(d > FAR_RADIUS) armed = true;
+      if(armed && d < NEAR_RADIUS){
+        armed = false;
+        moveNo();
+      }
     }, {passive:true});
 
     addEventListener('touchstart', (e) => {
       if(!document.getElementById('screenAsk').classList.contains('active')) return;
       const t = e.touches[0];
-      if(t && pointerNearNo(t.clientX, t.clientY)) moveNoButton();
+      if(!t) return;
+      const d = distToNo(t.clientX, t.clientY);
+      if(d < NEAR_RADIUS) moveNo();
     }, {passive:true});
 
     noBtn.addEventListener('click', (e) => {
       e.preventDefault(); e.stopPropagation();
-      if(document.getElementById('screenAsk').classList.contains('active')) moveNoButton();
+      if(document.getElementById('screenAsk').classList.contains('active')) moveNo();
     });
 
-    // Keep it clamped on resize
     addEventListener('resize', () => {
       if(roamingEnabled){
         const r = noBtn.getBoundingClientRect();
-        placeNoAt(r.left, r.top);
+        placeNo(r.left, r.top);
       }
     });
 
     // ===== pop hearts =====
     const fx = document.getElementById('fx');
     const popChars = ["💘","💞","💖","💕","❤","💗"];
-
     function spawnPopHeart(x, y){
       const el = document.createElement('div');
       el.className = 'popHeart';
@@ -842,7 +844,7 @@
       const dx = (Math.random()*2 - 1) * 140;
       const dy = -80 - Math.random()*180;
       const s  = 0.9 + Math.random()*0.9;
-      const rr  = (-18 + Math.random()*36) + "deg";
+      const rr = (-18 + Math.random()*36) + "deg";
       el.style.left = x + "px";
       el.style.top  = y + "px";
       el.style.setProperty('--dx', dx + "px");
@@ -853,7 +855,6 @@
       fx.appendChild(el);
       setTimeout(() => el.remove(), 950);
     }
-
     function popHeartsFromElement(el){
       const r = el.getBoundingClientRect();
       const x = (r.left + r.right)/2;
@@ -868,7 +869,6 @@
     const loadingText = document.getElementById('loadingText');
     const loadPhoto = document.getElementById('loadPhoto');
 
-    // Reservation last
     const loadingPhrases = [
       "Chargement de l’amour en cours… 💘",
       "Préparation des sentiments… 💞",
@@ -899,7 +899,6 @@
       "assets/final7.png",
       "assets/final8.png"
     ];
-
     function startSlideshow(totalMs){
       let i = 0;
       loadPhoto.src = loadPhotos[0];
@@ -916,15 +915,11 @@
     }
 
     function runLoading(){
-      // hide roaming no
       if(roamingEnabled){
         noBtn.style.opacity = '0';
         noBtn.style.pointerEvents = 'none';
       }
-
-      // remove big rectangle visual during loading
       card.classList.add('loadingMode');
-
       showScreen('screenLoad');
 
       const totalMs = 5800;
@@ -932,7 +927,6 @@
 
       const lastHold = 1200;
       const tLast = totalMs - lastHold;
-
       const schedule = [
         { t:   0, txt: loadingPhrases[0] },
         { t: 900, txt: loadingPhrases[1] },
@@ -940,31 +934,28 @@
         { t:2700, txt: loadingPhrases[3] },
         { t:3600, txt: loadingPhrases[4] },
         { t:4500, txt: loadingPhrases[5] },
-        { t:tLast, txt: loadingPhrases[6] } // NŪ last and readable
+        { t:tLast, txt: loadingPhrases[6] }
       ];
       for(const s of schedule) setTimeout(() => setLoadingPhraseSmooth(s.txt), s.t);
 
       const start = performance.now();
-
-      function tick(now){
+      const tick = (now) => {
         const raw = Math.max(0, Math.min(1, (now - start) / totalMs));
         const eased = easeInOutCubic(raw);
         const p = Math.round(eased * 100);
         pct.textContent = p;
         barFill.style.width = `${p}%`;
 
-        if(raw < 1){
-          requestAnimationFrame(tick);
-        } else {
+        if(raw < 1) requestAnimationFrame(tick);
+        else{
           clearInterval(slideTimer);
           setTimeout(() => {
-            // restore card visual for final
             card.classList.remove('loadingMode');
             showScreen('screenDone');
             startFinalCarousel();
           }, 420);
         }
-      }
+      };
       requestAnimationFrame(tick);
     }
 
@@ -990,7 +981,6 @@
     let finalIdx = 0;
     let slotIdx = 0;
     let z = 10;
-    let finalTimer = null;
 
     function showInSlot(slotEl, src){
       slotEl.classList.remove('show');
@@ -1005,17 +995,15 @@
       if(finalStarted) return;
       finalStarted = true;
 
-      slotEls.forEach(s => { s.classList.remove('show'); s.src = ""; s.style.zIndex = "0"; });
+      slotEls.forEach(s => { s.classList.remove('show'); s.src=""; s.style.zIndex="0"; });
       finalIdx = 0; slotIdx = 0; z = 10;
 
       const step = () => {
         const slot = slotEls[slotIdx % 3];
         const src = finalCyclePhotos[finalIdx % finalCyclePhotos.length];
         showInSlot(slot, src);
-
-        finalIdx++;
-        slotIdx++;
-        finalTimer = setTimeout(step, 3000);
+        finalIdx++; slotIdx++;
+        setTimeout(step, 3000);
       };
       step();
     }
