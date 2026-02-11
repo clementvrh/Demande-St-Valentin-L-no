@@ -36,8 +36,7 @@
 
     /* custom cursor */
     #cursorDot{
-      position:fixed;
-      left:0; top:0;
+      position:fixed; left:0; top:0;
       width:10px; height:10px;
       border-radius:999px;
       background: radial-gradient(circle at 35% 35%, #ffd1df 0%, var(--pink) 45%, var(--pink2) 100%);
@@ -87,8 +86,6 @@
       overflow: visible;
       transition: opacity .35s ease;
     }
-
-    /* during loading: remove big rectangle */
     .card.loadingMode{
       background: transparent;
       border-color: transparent;
@@ -111,14 +108,10 @@
       pointer-events:auto;
     }
 
-    /* hearts top */
     .hearts-top{
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      align-items:center;
-      margin-bottom:8px;
-      height:52px;
+      display:flex; gap:10px;
+      justify-content:center; align-items:center;
+      margin-bottom:8px; height:52px;
     }
     .heart{
       width:32px; height:32px;
@@ -156,24 +149,34 @@
       margin:10px 0 18px;
       min-height: 96px;
     }
+
+    /* name starts black, then becomes pink with glow */
     .name{
       font-weight:950;
-      background: linear-gradient(90deg, var(--pink2), #ff7aa2);
-      -webkit-background-clip:text;
-      background-clip:text;
-      color: transparent;
-      white-space: nowrap;
+      color: var(--text);
+      transition: color .55s var(--ease), text-shadow .55s var(--ease);
+    }
+    .name.glowStart{
+      text-shadow: 0 0 0 rgba(255,47,107,0);
+    }
+    .name.glowOn{
+      color: var(--pink2);
+      text-shadow: 0 0 18px rgba(255,47,107,.55), 0 0 34px rgba(255,47,107,.25);
+    }
+    .name.glowDone{
+      color: var(--pink2);
+      text-shadow: 0 0 0 rgba(255,47,107,0);
     }
 
-    /* typewriter letter animation */
+    /* typewriter: each char ease-in */
     .twChar{
       display:inline-block;
-      transform: translateY(6px);
       opacity:0;
-      animation: twIn 320ms cubic-bezier(.22,.61,.36,1) forwards;
+      transform: translateY(8px);
+      animation: twIn 520ms cubic-bezier(.18,.82,.24,1) forwards;
     }
     @keyframes twIn{
-      to{ transform: translateY(0); opacity:1; }
+      to{ opacity:1; transform: translateY(0); }
     }
 
     .buttons{
@@ -215,12 +218,12 @@
       box-shadow: 0 10px 24px rgba(0,0,0,.06);
       backdrop-filter: blur(8px);
     }
-    #noBtn.fixedRoam{
+    #noBtn.roam{
       position: fixed;
       left:0; top:0;
       transform:none;
-      z-index: 50;
-      transition: left .18s var(--ease), top .18s var(--ease), opacity .25s ease;
+      z-index:50;
+      transition: left .20s var(--ease), top .20s var(--ease);
     }
 
     .hint{
@@ -264,11 +267,10 @@
       gap: 18px;
       padding-top: 8px;
     }
-    /* bigger images */
     #loadPhoto{
-      width: min(720px, 92vw);
+      width: min(760px, 94vw);
       height:auto;
-      max-height: 360px;
+      max-height: 420px;
       object-fit: contain;
       opacity: 1;
       transition: opacity .35s ease;
@@ -344,22 +346,21 @@
       margin: 0 auto;
       padding-top: 10px;
     }
-    .finalTitle{ font-size: clamp(44px, 4.6vw, 60px); margin:0; }
-    .finalSub{ margin:0; color: rgba(0,0,0,.55); font-weight:900; font-size:20px; }
-    .finalLove{ margin:0; font-weight:950; font-size:22px; }
+    .finalTitle{ font-size: clamp(48px, 5vw, 66px); margin:0; }
+    .finalSub{ margin:0; color: rgba(0,0,0,.55); font-weight:900; font-size:22px; }
+    .finalLove{ margin:0; font-weight:950; font-size:24px; }
 
-    /* emoji heart */
     .finalHeartEmoji{
-      font-size: 64px;
+      font-size: 78px; /* bigger */
       line-height: 1;
-      filter: drop-shadow(0 16px 34px rgba(255,47,107,.22));
+      filter: drop-shadow(0 0 18px rgba(255,47,107,.35)) drop-shadow(0 16px 34px rgba(255,47,107,.18));
       animation: finalBeat 1.25s ease-in-out infinite;
     }
     @keyframes finalBeat{
       0%,100%{ transform: scale(1); }
-      18%{ transform: scale(1.06); }
+      18%{ transform: scale(1.07); }
       36%{ transform: scale(.99); }
-      54%{ transform: scale(1.09); }
+      54%{ transform: scale(1.10); }
       72%{ transform: scale(1); }
     }
 
@@ -387,7 +388,8 @@
     .slot.pos2{ right:-16px; top:245px; transform: rotate(-7deg) translateY(6px); }
     .slot.pos2.show{ transform: rotate(-7deg) translateY(0); }
 
-    .slot.pos3{ right:-26px; top:145px; transform: rotate(3deg) translateY(6px); }
+    /* moved a bit more to the right so it doesn't touch the 2 others */
+    .slot.pos3{ right:-52px; top:145px; transform: rotate(3deg) translateY(6px); }
     .slot.pos3.show{ transform: rotate(3deg) translateY(0); }
 
     @media (max-width: 980px){
@@ -486,10 +488,7 @@
 
     addEventListener('mousemove', (e) => {
       targetX = e.clientX; targetY = e.clientY;
-      if(!cursorVisible){
-        cursorVisible = true;
-        cursorDot.style.opacity = '1';
-      }
+      if(!cursorVisible){ cursorVisible = true; cursorDot.style.opacity = '1'; }
     }, {passive:true});
 
     addEventListener('mouseleave', () => {
@@ -531,18 +530,19 @@
       document.getElementById(id).classList.add('active');
     }
 
-    // ===== typewriter (slower + smooth) =====
+    // ===== typewriter (slow + very smooth) + name glow at end =====
     const titleEl = document.getElementById('questionTitle');
-    const finalTitleHTML = `<span class="name">Lénora Deparis Verhoeven</span>,<br/>veux-tu être ma Valentine ?`;
+    const finalTitleHTML =
+      `<span class="name glowStart" id="nameSpan">Lénora Deparis Verhoeven</span>,<br/>veux-tu être ma Valentine ?`;
 
-    function typewriterHTML(el, finalHTML){
+    function typewriterRich(el){
       const plain = "Lénora Deparis Verhoeven,\nveux-tu être ma Valentine ?";
       el.innerHTML = "";
       let i = 0;
 
-      const baseDelay = 42;
-      const jitterMax = 18;
-      const startDelay = 450;
+      const startDelay = 520;
+      const baseDelay = 52;   // slower
+      const jitterMax = 22;
 
       const step = () => {
         i++;
@@ -551,6 +551,7 @@
         const lastChar = shown.slice(-1);
         const before = shown.slice(0, -1).replace(/\n/g, "<br/>");
 
+        // during typing: all black
         el.innerHTML =
           before +
           (lastChar && lastChar !== "\n" ? `<span class="twChar">${lastChar}</span>` : "");
@@ -559,15 +560,28 @@
           const jitter = (Math.random()*jitterMax)|0;
           setTimeout(step, baseDelay + jitter);
         } else {
-          el.innerHTML = finalHTML;
+          // swap to final rich HTML with name span
+          el.innerHTML = finalTitleHTML;
+
+          // glow reveal: black -> glow -> pink
+          const nameSpan = document.getElementById('nameSpan');
+          // start glow
+          requestAnimationFrame(() => {
+            nameSpan.classList.add('glowOn');
+            // then remove glow but keep color
+            setTimeout(() => {
+              nameSpan.classList.remove('glowOn');
+              nameSpan.classList.add('glowDone');
+            }, 650);
+          });
         }
       };
 
       setTimeout(step, startDelay);
     }
-    typewriterHTML(titleEl, finalTitleHTML);
+    typewriterRich(titleEl);
 
-    // ===== buttons / NO logic (ring around card) =====
+    // ===== buttons / NO orbit system (rebuild from zero) =====
     const yesBtn = document.getElementById('yesBtn');
     const noBtn = document.getElementById('noBtn');
     const hintEl = document.getElementById('hint');
@@ -607,21 +621,22 @@
 
     let noInteractions = 0;
     let lastRandomIdx = -1;
-    let roamingEnabled = false;
-    let lastMoveAt = 0;
 
-    const COOLDOWN_MS = 260;
-    const NEAR_RADIUS = 95;
-    const FAR_RADIUS = 140;
-    const PADDING = 12;
-
-    // ring config (around the card)
-    const RING_GAP = 18;
-    const RING_THICKNESS = 120;
-
+    // Trigger behavior (fix "it runs immediately"):
+    const NEAR = 85;   // when mouse gets closer than this -> move
+    const FAR  = 150;  // must exit this distance to re-arm
     let armed = true;
 
-    const clamp = (v,min,max) => Math.max(min, Math.min(max, v));
+    const MOVE_COOLDOWN = 240;
+    let lastMoveAt = 0;
+
+    // Orbit config
+    const ORBIT_GAP = 16;      // distance from card
+    const ORBIT_THICK = 80;    // allowed thickness around card
+    let orbitAngle = 0;        // where it starts (radians)
+
+    const PADDING = 12;
+    const clamp = (v,mi,ma)=>Math.max(mi,Math.min(ma,v));
 
     function setNoText(){
       if(noInteractions <= 5){
@@ -629,8 +644,8 @@
         return;
       }
       let idx;
-      do{ idx = (Math.random() * noRandomPool.length) | 0; }
-      while(noRandomPool.length > 1 && idx === lastRandomIdx);
+      do{ idx = (Math.random()*noRandomPool.length)|0; }
+      while(noRandomPool.length>1 && idx === lastRandomIdx);
       lastRandomIdx = idx;
       noBtn.textContent = noRandomPool[idx];
     }
@@ -638,85 +653,119 @@
     function updateHint(){
       if(noInteractions < 1) return;
       hintEl.classList.add('show');
-      const step = clamp(Math.floor((noInteractions - 1) / 2), 0, hintSteps.length - 1);
+      const step = clamp(Math.floor((noInteractions - 1)/2), 0, hintSteps.length-1);
       hintEl.textContent = hintSteps[step];
     }
 
-    function enableRoaming(){
-      if(roamingEnabled) return;
-      roamingEnabled = true;
-      noBtn.classList.add('fixedRoam');
+    function enableRoam(){
+      if(noBtn.classList.contains('roam')) return;
+      noBtn.classList.add('roam');
+      // place once near its original position
       const r = noBtn.getBoundingClientRect();
-      placeNo(r.left, r.top);
+      noBtn.style.left = r.left + "px";
+      noBtn.style.top  = r.top + "px";
     }
 
-    function getAllowedZones(btnW, btnH){
+    // Build points around the card in an "orbit ring" and pick one by angle
+    function orbitPosition(btnW, btnH, angle){
       const c = card.getBoundingClientRect();
 
-      const topBand = { x: c.left - RING_THICKNESS, y: c.top - RING_THICKNESS, w: (c.right-c.left)+2*RING_THICKNESS, h: RING_THICKNESS };
-      const bottomBand = { x: c.left - RING_THICKNESS, y: c.bottom, w: (c.right-c.left)+2*RING_THICKNESS, h: RING_THICKNESS };
-      const leftBand = { x: c.left - RING_THICKNESS, y: c.top, w: RING_THICKNESS, h: (c.bottom-c.top) };
-      const rightBand = { x: c.right, y: c.top, w: RING_THICKNESS, h: (c.bottom-c.top) };
-      const rawZones = [topBand, bottomBand, leftBand, rightBand];
-
-      const clampZone = (z) => {
-        const x = Math.max(PADDING, z.x + RING_GAP);
-        const y = Math.max(PADDING, z.y + RING_GAP);
-        const x2 = Math.min(innerWidth - PADDING,  z.x + z.w - RING_GAP);
-        const y2 = Math.min(innerHeight - PADDING, z.y + z.h - RING_GAP);
-        return { x, y, w: Math.max(0, x2 - x), h: Math.max(0, y2 - y) };
+      // define a ring rectangle expanded by (gap + thickness)
+      const outer = {
+        left:  c.left - (ORBIT_GAP + ORBIT_THICK),
+        top:   c.top  - (ORBIT_GAP + ORBIT_THICK),
+        right: c.right + (ORBIT_GAP + ORBIT_THICK),
+        bottom:c.bottom+ (ORBIT_GAP + ORBIT_THICK)
+      };
+      const inner = {
+        left:  c.left - ORBIT_GAP,
+        top:   c.top  - ORBIT_GAP,
+        right: c.right + ORBIT_GAP,
+        bottom:c.bottom+ ORBIT_GAP
       };
 
-      return rawZones
-        .map(clampZone)
-        .filter(z => z.w >= btnW && z.h >= btnH)
-        .map(z => ({
-          xMin: z.x,
-          xMax: z.x + z.w - btnW,
-          yMin: z.y,
-          yMax: z.y + z.h - btnH
-        }));
+      // We parametrize the outer rectangle perimeter using angle:
+      // Convert angle to a point on an ellipse-ish mapping, then project to rectangle edges.
+      const cx = (outer.left + outer.right)/2;
+      const cy = (outer.top + outer.bottom)/2;
+      const rx = (outer.right - outer.left)/2;
+      const ry = (outer.bottom - outer.top)/2;
+
+      // point on ellipse
+      let px = cx + Math.cos(angle)*rx;
+      let py = cy + Math.sin(angle)*ry;
+
+      // snap to closest outer edge (rectangle perimeter)
+      const dLeft = Math.abs(px - outer.left);
+      const dRight= Math.abs(px - outer.right);
+      const dTop  = Math.abs(py - outer.top);
+      const dBot  = Math.abs(py - outer.bottom);
+      const m = Math.min(dLeft,dRight,dTop,dBot);
+
+      if(m === dLeft)  px = outer.left;
+      else if(m === dRight) px = outer.right;
+      else if(m === dTop)   py = outer.top;
+      else                  py = outer.bottom;
+
+      // Now we "pull" the point inward randomly within ORBIT_THICK so it stays close
+      const pull = Math.random()*ORBIT_THICK; // 0..thick
+      // Determine normal direction towards inner rectangle
+      if(px === outer.left)  px = inner.left - pull;
+      if(px === outer.right) px = inner.right + pull;
+      if(py === outer.top)   py = inner.top - pull;
+      if(py === outer.bottom)py = inner.bottom + pull;
+
+      // convert to top-left
+      let left = px - btnW/2;
+      let top  = py - btnH/2;
+
+      // clamp to viewport
+      left = clamp(left, PADDING, innerWidth - btnW - PADDING);
+      top  = clamp(top,  PADDING, innerHeight - btnH - PADDING);
+
+      return {left, top};
     }
 
-    function randomPointInZones(zones){
-      const areas = zones.map(z => (z.xMax - z.xMin) * (z.yMax - z.yMin));
-      const total = areas.reduce((a,b)=>a+b,0);
-      let r = Math.random() * total;
-      let idx = 0;
-      while(r > areas[idx]){ r -= areas[idx]; idx++; }
-      const z = zones[idx];
-      return {
-        left: z.xMin + Math.random() * (z.xMax - z.xMin),
-        top:  z.yMin + Math.random() * (z.yMax - z.yMin)
-      };
-    }
+    // Avoid the central buttons area so it doesn't jump on them
+    function tooCloseToButtons(left, top, btnW, btnH){
+      const yes = yesBtn.getBoundingClientRect();
+      const centerX = left + btnW/2;
+      const centerY = top + btnH/2;
 
-    function placeNo(left, top){
-      const r = noBtn.getBoundingClientRect();
-      const bw = r.width, bh = r.height;
-      const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
-      const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
-      noBtn.style.left = `${clamp(left, PADDING, maxLeft)}px`;
-      noBtn.style.top  = `${clamp(top,  PADDING, maxTop)}px`;
+      const yesCx = (yes.left + yes.right)/2;
+      const yesCy = (yes.top + yes.bottom)/2;
+
+      return Math.hypot(centerX - yesCx, centerY - yesCy) < 190;
     }
 
     function moveNo(){
       const now = Date.now();
-      if(now - lastMoveAt < COOLDOWN_MS) return;
+      if(now - lastMoveAt < MOVE_COOLDOWN) return;
       lastMoveAt = now;
 
       noInteractions++;
       setNoText();
       updateHint();
-      enableRoaming();
+      enableRoam();
 
       requestAnimationFrame(() => {
         const r = noBtn.getBoundingClientRect();
         const bw = r.width, bh = r.height;
-        const zones = getAllowedZones(bw, bh);
 
-        const pos = zones.length ? randomPointInZones(zones) : { left: PADDING, top: PADDING };
-        placeNo(pos.left, pos.top);
+        // choose a new angle far enough from last
+        orbitAngle += (Math.PI/2) + Math.random()*Math.PI; // jump 90°..270°
+        let pos = orbitPosition(bw, bh, orbitAngle);
+
+        // retry a few times if too close to the YES area
+        let tries = 0;
+        while(tries < 10 && tooCloseToButtons(pos.left, pos.top, bw, bh)){
+          orbitAngle += 0.7; // rotate a bit more
+          pos = orbitPosition(bw, bh, orbitAngle);
+          tries++;
+        }
+
+        noBtn.style.left = pos.left + "px";
+        noBtn.style.top  = pos.top + "px";
       });
     }
 
@@ -729,9 +778,10 @@
 
     addEventListener('mousemove', (e) => {
       if(!document.getElementById('screenAsk').classList.contains('active')) return;
+
       const d = distToNo(e.clientX, e.clientY);
-      if(d > FAR_RADIUS) armed = true;
-      if(armed && d < NEAR_RADIUS){
+      if(d > FAR) armed = true;
+      if(armed && d < NEAR){
         armed = false;
         moveNo();
       }
@@ -743,9 +793,13 @@
     });
 
     addEventListener('resize', () => {
-      if(roamingEnabled){
+      if(noBtn.classList.contains('roam')){
         const r = noBtn.getBoundingClientRect();
-        placeNo(r.left, r.top);
+        const bw = r.width, bh = r.height;
+        const left = clamp(r.left, PADDING, innerWidth - bw - PADDING);
+        const top  = clamp(r.top,  PADDING, innerHeight - bh - PADDING);
+        noBtn.style.left = left + "px";
+        noBtn.style.top  = top + "px";
       }
     });
 
@@ -830,13 +884,12 @@
     }
 
     function runLoading(){
-      if(roamingEnabled){
+      // hide no button roaming during loading (optional, but cleaner)
+      if(noBtn.classList.contains('roam')){
         noBtn.style.opacity = '0';
         noBtn.style.pointerEvents = 'none';
       }
-      // remove big rectangle on loading
       card.classList.add('loadingMode');
-
       showScreen('screenLoad');
 
       const totalMs = 5800;
