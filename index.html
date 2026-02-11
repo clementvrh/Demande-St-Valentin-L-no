@@ -17,21 +17,27 @@
     }
 
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
 
+    html, body { height: 100%; }
     body{
       margin:0;
       font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background: radial-gradient(1200px 800px at 50% 20%, #fff 0%, var(--bg) 55%, #ffe8f0 100%);
       color: var(--text);
       overflow: hidden;
-      cursor: none; /* hide default cursor (desktop) */
+
+      /* Cursor custom on desktop */
+      cursor: none !important;
+    }
+    button, a, input, label, textarea, select{
+      cursor: none !important; /* keep custom cursor even on click/hover */
     }
 
-    /* Show default cursor on touch devices */
+    /* Default cursor on touch devices */
     @media (hover: none) and (pointer: coarse){
-      body{ cursor: auto; }
+      body{ cursor: auto !important; }
       #cursorDot{ display: none !important; }
+      button, a, input, label, textarea, select{ cursor: auto !important; }
     }
 
     /* Custom cursor dot */
@@ -42,17 +48,17 @@
       border-radius: 999px;
       background: radial-gradient(circle at 35% 35%, #ffd1df 0%, var(--pink) 45%, var(--pink2) 100%);
       box-shadow:
-        0 0 18px rgba(255,47,107,.30),
-        0 0 36px rgba(255,47,107,.18);
+        0 0 16px rgba(255,47,107,.30),
+        0 0 30px rgba(255,47,107,.16);
       transform: translate(-50%, -50%);
       pointer-events: none;
       z-index: 9999;
       opacity: 0;
-      transition: opacity .2s ease;
+      transition: opacity .15s ease;
       will-change: transform;
     }
 
-    /* Background hearts */
+    /* Background floating hearts */
     #bg{
       position: fixed;
       inset: 0;
@@ -95,7 +101,7 @@
       box-shadow: 0 20px 60px rgba(0,0,0,.07);
       border: 1px solid rgba(255,255,255,.55);
       position: relative;
-      overflow: visible; /* allow polaroids outside */
+      overflow: visible; /* allow final photos to overlap outside */
       min-height: 380px;
     }
 
@@ -116,7 +122,7 @@
       pointer-events: auto;
     }
 
-    /* Top hearts */
+    /* Top hearts (screen 1) */
     .hearts-top{
       display:flex;
       gap: 10px;
@@ -201,11 +207,10 @@
       border-radius: 999px;
       font-weight: 950;
       font-size: 16px;
-      cursor: pointer;
-      transition: transform .12s ease, box-shadow .22s ease, background .22s ease, opacity .22s ease;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
       white-space: nowrap;
+      transition: transform .12s ease, box-shadow .22s ease, background .22s ease, opacity .22s ease;
     }
 
     #yesBtn{
@@ -218,7 +223,7 @@
     #yesBtn:hover{ transform: translateY(-1px); }
     #yesBtn:active{ transform: translateY(1px) scale(.99); }
 
-    /* NO button */
+    /* NO button: starts in row, then roams (fixed) */
     #noBtn{
       background: rgba(255, 77, 121, .10);
       color: var(--pink2);
@@ -256,7 +261,7 @@
       transform: translateY(0);
     }
 
-    /* Pop hearts layer */
+    /* FX layer */
     #fx{
       position: fixed;
       inset: 0;
@@ -285,34 +290,38 @@
       }
     }
 
-    /* Loading */
-    .loaderWrap{
-      display:flex;
-      flex-direction: column;
-      align-items:center;
-      gap: 14px;
-      padding-top: 2px;
+    /* LOADING SCREEN: photo above panel, panel contains only bar + text */
+    .loadStage{
+      position: relative;
+      height: 100%;
+      display: grid;
+      place-items: center;
     }
 
-    /* Photo above, not cropped */
-    .loadPhotoWrap{
+    .loadPanel{
       width: min(560px, 86vw);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      margin-bottom: 2px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(255,255,255,.55);
+      box-shadow: 0 18px 50px rgba(0,0,0,.06);
+      padding: 26px 18px 22px;
+      margin-top: 85px; /* leaves room for photo above */
     }
+
+    /* Photo ABOVE the panel, centered, no frame added */
     #loadPhoto{
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translate(-50%, -8px);
       width: min(520px, 82vw);
       height: auto;
       max-height: 260px;
       object-fit: contain;
-      border-radius: 18px;
-      box-shadow: 0 22px 60px rgba(0,0,0,.14);
-      border: 1px solid rgba(255,255,255,.55);
-      background: rgba(255,255,255,.35);
       opacity: 1;
       transition: opacity .35s ease;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.12)); /* very light shadow */
+      border-radius: 0; /* keep your polaroid style as-is */
     }
     #loadPhoto.fade{ opacity: 0; }
 
@@ -321,9 +330,10 @@
       transform: rotate(-45deg);
       background: var(--pink2);
       border-radius: 7px;
-      filter: drop-shadow(0 12px 25px rgba(255,47,107,.22)) drop-shadow(0 0 12px rgba(255,47,107,.20));
+      filter: drop-shadow(0 12px 25px rgba(255,47,107,.18));
       animation: beat 1.15s ease-in-out infinite;
       position: relative;
+      margin: 0 auto 10px;
     }
     .loaderHeart::before, .loaderHeart::after{
       content:"";
@@ -331,7 +341,6 @@
       width: 30px; height: 30px;
       background: var(--pink2);
       border-radius: 50%;
-      filter: drop-shadow(0 0 12px rgba(255,47,107,.18));
     }
     .loaderHeart::before{ top:-15px; left:0; }
     .loaderHeart::after { left:15px; top:0; }
@@ -343,6 +352,7 @@
       border-radius: 999px;
       overflow: hidden;
       border: 1px solid rgba(255, 77, 121, .18);
+      margin: 8px auto 10px;
     }
     .bar > i{
       display:block;
@@ -355,6 +365,7 @@
     .percent{
       font-weight: 950;
       color: var(--pink2);
+      margin-bottom: 8px;
     }
     .loadingText{
       color: var(--muted);
@@ -369,65 +380,32 @@
       transform: translateY(6px);
     }
 
-    /* Final */
+    /* FINAL: single-piece heart with 3D look via SVG */
     .finalText{
       display:flex;
       flex-direction: column;
       align-items:center;
-      gap: 8px;
+      gap: 10px;
       max-width: 560px;
       margin: 0 auto;
+      padding-top: 12px;
     }
-
-    .finalHeart{
-      width: 66px;
-      height: 66px;
+    .finalHeartWrap{
+      width: 88px;
+      height: 88px;
+      filter: drop-shadow(0 14px 30px rgba(255,47,107,.22));
+      animation: finalBeat 1.25s ease-in-out infinite;
       position: relative;
-      transform: rotate(-45deg);
-      border-radius: 14px;
-      background: linear-gradient(135deg, #ff7aa2 0%, #ff2f6b 55%, #d80f4b 100%);
-      animation: beat 1.2s ease-in-out infinite;
-      box-shadow:
-        inset 0 10px 18px rgba(255,255,255,.25),
-        inset 0 -12px 18px rgba(0,0,0,.10),
-        0 18px 40px rgba(255,47,107,.20),
-        0 0 26px rgba(255,47,107,.16);
-      filter: drop-shadow(0 0 18px rgba(255,47,107,.20));
-      margin-top: 4px;
     }
-    .finalHeart::before,
-    .finalHeart::after{
-      content:"";
-      position:absolute;
-      width: 66px;
-      height: 66px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ff7aa2 0%, #ff2f6b 55%, #d80f4b 100%);
-      box-shadow:
-        inset 0 10px 18px rgba(255,255,255,.22),
-        inset 0 -12px 18px rgba(0,0,0,.10);
+    @keyframes finalBeat{
+      0%, 100% { transform: scale(1); }
+      18% { transform: scale(1.06); }
+      36% { transform: scale(.99); }
+      54% { transform: scale(1.09); }
+      72% { transform: scale(1.00); }
     }
-    .finalHeart::before{ top:-33px; left:0; }
-    .finalHeart::after{ left:33px; top:0; }
-
-    .finalHeartGlow{
-      position:absolute;
-      inset: -22px;
-      border-radius: 20px;
-      background: radial-gradient(circle, rgba(255,47,107,.32), rgba(255,47,107,0) 62%);
-      animation: glow 1.4s ease-in-out infinite;
-      transform: rotate(45deg);
-      pointer-events:none;
-      filter: blur(1px);
-      z-index: -1;
-    }
-    @keyframes glow{
-      0%, 100% { opacity: .55; transform: rotate(45deg) scale(.98); }
-      50%      { opacity: .98; transform: rotate(45deg) scale(1.08); }
-    }
-
     .subtitle{
-      margin: 4px 0 0;
+      margin: 0;
       color: var(--muted);
       font-weight: 900;
     }
@@ -436,39 +414,51 @@
       font-weight: 950;
     }
 
-    /* Final polaroids outside on the right */
+    /* FINAL PHOTOS: overlap top-right corner slightly, second overlaps bottom-right of first */
     .finalPolaroids{
       position: absolute;
-      right: -260px;
-      top: 50%;
-      transform: translateY(-50%);
-      display:flex;
-      flex-direction: column;
-      gap: 14px;
-      align-items:center;
+      right: -120px;
+      top: 28px;
+      width: 260px;
       pointer-events: none;
     }
-    .polaroidImg{
-      width: 240px;
+    .finalPolaroids img{
+      width: 260px;
       height: auto;
-      border-radius: 18px;
-      box-shadow: 0 22px 60px rgba(0,0,0,.14);
-      border: 1px solid rgba(255,255,255,.55);
-      background: rgba(255,255,255,.35);
+      display:block;
+      border-radius: 0; /* keep your own frame */
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.14)); /* subtle shadow only */
     }
-    .tilt1{ transform: rotate(6deg); }
-    .tilt2{ transform: rotate(-7deg); }
+    .finalPolaroid1{
+      position: absolute;
+      right: 0;
+      top: -6px;     /* eats a bit into the card top-right */
+      transform: rotate(6deg);
+    }
+    .finalPolaroid2{
+      position: absolute;
+      right: 6px;
+      top: 220px;    /* overlaps lower-right of first */
+      transform: rotate(-7deg);
+    }
 
+    /* On smaller screens: place photos below, not outside */
     @media (max-width: 980px){
       .finalPolaroids{
         position: static;
-        transform: none;
+        width: auto;
         margin: 18px auto 0;
-        flex-direction: row;
-        flex-wrap: wrap;
+        display:flex;
+        gap: 14px;
+        justify-content:center;
         pointer-events: auto;
       }
-      .polaroidImg{ width: min(280px, 70vw); }
+      .finalPolaroids img{
+        width: min(300px, 70vw);
+        position: static;
+        transform: none;
+      }
+      .finalPolaroid2{ top:auto; }
     }
   </style>
 </head>
@@ -501,37 +491,111 @@
         <div id="hint" class="hint"></div>
       </section>
 
-      <!-- SCREEN 2 -->
+      <!-- SCREEN 2 (LOADING) -->
       <section id="screenLoad" class="screen">
-        <div class="loaderWrap">
-          <div class="loadPhotoWrap">
-            <img id="loadPhoto" src="assets/final1.png" alt="Nous - loading">
+        <div class="loadStage">
+          <img id="loadPhoto" src="assets/final1.png" alt="Nous - loading">
+
+          <div class="loadPanel">
+            <div class="loaderHeart"></div>
+            <div class="bar"><i id="barFill"></i></div>
+            <div class="percent"><span id="pct">0</span>%</div>
+            <div class="loadingText" id="loadingText">Réservation de la table au NŪ… 🍽️✨</div>
           </div>
-
-          <div class="loaderHeart"></div>
-
-          <div class="bar"><i id="barFill"></i></div>
-          <div class="percent"><span id="pct">0</span>%</div>
-          <div class="loadingText" id="loadingText">Réservation de la table au NŪ… 🍽️✨</div>
         </div>
       </section>
 
-      <!-- SCREEN 3 -->
+      <!-- SCREEN 3 (FINAL) -->
       <section id="screenDone" class="screen">
         <div class="finalText">
-          <div style="position:relative;">
-            <div class="finalHeartGlow"></div>
-            <div class="finalHeart"></div>
+          <div class="finalHeartWrap" aria-hidden="true">
+            <!-- Single-path heart SVG with 3D shading + glow -->
+            <svg viewBox="0 0 120 120" width="88" height="88">
+              <defs>
+                <radialGradient id="gMain" cx="35%" cy="30%" r="75%">
+                  <stop offset="0%" stop-color="#ffd1df"/>
+                  <stop offset="35%" stop-color="#ff6b97"/>
+                  <stop offset="70%" stop-color="#ff2f6b"/>
+                  <stop offset="100%" stop-color="#d80f4b"/>
+                </radialGradient>
+
+                <!-- soft highlight -->
+                <radialGradient id="gHi" cx="30%" cy="28%" r="55%">
+                  <stop offset="0%" stop-color="rgba(255,255,255,.85)"/>
+                  <stop offset="55%" stop-color="rgba(255,255,255,.12)"/>
+                  <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                </radialGradient>
+
+                <!-- glow -->
+                <filter id="fGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="6" result="blur"/>
+                  <feColorMatrix in="blur" type="matrix"
+                    values="1 0 0 0 0
+                            0 0.2 0 0 0
+                            0 0 0.3 0 0
+                            0 0 0 0.35 0" result="pinkBlur"/>
+                  <feMerge>
+                    <feMergeNode in="pinkBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+
+                <!-- subtle inner shadow for 3D -->
+                <filter id="fInner" x="-50%" y="-50%" width="200%" height="200%">
+                  <feOffset dx="0" dy="2"/>
+                  <feGaussianBlur stdDeviation="3" result="offBlur"/>
+                  <feComposite in="offBlur" in2="SourceAlpha" operator="arithmetic"
+                               k2="-1" k3="1" result="innerShadow"/>
+                  <feColorMatrix in="innerShadow" type="matrix"
+                    values="0 0 0 0 0
+                            0 0 0 0 0
+                            0 0 0 0 0
+                            0 0 0 .28 0"/>
+                  <feComposite in2="SourceGraphic" operator="over"/>
+                </filter>
+              </defs>
+
+              <!-- glow base -->
+              <path filter="url(#fGlow)" d="M60 108
+                C58 106, 20 80, 20 48
+                C20 28, 34 18, 47 18
+                C55 18, 60 23, 60 23
+                C60 23, 65 18, 73 18
+                C86 18, 100 28, 100 48
+                C100 80, 62 106, 60 108 Z"
+                fill="url(#gMain)"/>
+
+              <!-- inner shading -->
+              <path filter="url(#fInner)" d="M60 108
+                C58 106, 20 80, 20 48
+                C20 28, 34 18, 47 18
+                C55 18, 60 23, 60 23
+                C60 23, 65 18, 73 18
+                C86 18, 100 28, 100 48
+                C100 80, 62 106, 60 108 Z"
+                fill="url(#gMain)"/>
+
+              <!-- highlight -->
+              <path d="M60 108
+                C58 106, 20 80, 20 48
+                C20 28, 34 18, 47 18
+                C55 18, 60 23, 60 23
+                C60 23, 65 18, 73 18
+                C86 18, 100 28, 100 48
+                C100 80, 62 106, 60 108 Z"
+                fill="url(#gHi)" opacity="0.55"/>
+            </svg>
           </div>
 
           <h1>Yeees&nbsp;!</h1>
-          <div class="subtitle">Je savais que tu allais dire oui 💞</div>
+          <p class="subtitle">Je savais que tu allais dire oui 💞</p>
           <p class="loveLine">Je t’aime ma Léno ❤️</p>
         </div>
 
+        <!-- Overlapping polaroids -->
         <div class="finalPolaroids" aria-label="Polaroids">
-          <img class="polaroidImg tilt1" src="assets/final9.png" alt="Nous - polaroid 1">
-          <img class="polaroidImg tilt2" src="assets/final2.png" alt="Nous - polaroid 2">
+          <img class="finalPolaroid1" src="assets/final9.png" alt="Nous - polaroid 1">
+          <img class="finalPolaroid2" src="assets/final2.png" alt="Nous - polaroid 2">
         </div>
       </section>
 
@@ -546,7 +610,6 @@
     let cursorVisible = false;
 
     function cursorLoop(){
-      // simple smooth follow
       curX += (targetX - curX) * 0.22;
       curY += (targetY - curY) * 0.22;
       cursorDot.style.transform = `translate(${curX}px, ${curY}px) translate(-50%, -50%)`;
@@ -604,7 +667,6 @@
     }
 
     // ========= No button logic =========
-    const btnRow = document.getElementById('btnRow');
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
     const hintEl = document.getElementById('hint');
@@ -653,11 +715,12 @@
 
     let noInteractions = 0;
     let lastRandomIdx = -1;
-
     let roamingEnabled = false;
     let lastMoveAt = 0;
+
     const COOLDOWN_MS = 280;
     const DODGE_RADIUS = 95;
+    const PADDING = 10;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
@@ -685,10 +748,20 @@
     function enableRoaming(){
       if(roamingEnabled) return;
       roamingEnabled = true;
+
       noBtn.classList.add('fixedRoam');
+
       const r = noBtn.getBoundingClientRect();
-      noBtn.style.left = `${(r.left + r.right)/2}px`;
-      noBtn.style.top  = `${(r.top + r.bottom)/2}px`;
+      const cx = (r.left + r.right)/2;
+      const cy = (r.top + r.bottom)/2;
+
+      // clamp immediately so it never starts off-screen
+      const bw = r.width, bh = r.height;
+      const x = clamp(cx, bw/2 + PADDING, window.innerWidth - bw/2 - PADDING);
+      const y = clamp(cy, bh/2 + PADDING, window.innerHeight - bh/2 - PADDING);
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top  = `${y}px`;
     }
 
     function moveNoButton(){
@@ -699,22 +772,17 @@
       noInteractions++;
       setNoText();
       updateHint();
-
       if(noInteractions >= 1) enableRoaming();
 
-      const padding = 16;
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-
       const r = noBtn.getBoundingClientRect();
-      const bw = r.width;
-      const bh = r.height;
+      const bw = r.width, bh = r.height;
 
-      const minX = padding + bw/2;
-      const maxX = vw - padding - bw/2;
-      const minY = padding + bh/2;
-      const maxY = vh - padding - bh/2;
+      const minX = bw/2 + PADDING;
+      const maxX = window.innerWidth - bw/2 - PADDING;
+      const minY = bh/2 + PADDING;
+      const maxY = window.innerHeight - bh/2 - PADDING;
 
+      // avoid being too close to YES
       const yesRect = yesBtn.getBoundingClientRect();
       const yesCx = (yesRect.left + yesRect.right)/2;
       const yesCy = (yesRect.top + yesRect.bottom)/2;
@@ -725,6 +793,9 @@
         y = minY + Math.random() * (maxY - minY);
         tries++;
       } while(Math.hypot(x - yesCx, y - yesCy) < 180 && tries < 30);
+
+      x = clamp(x, minX, maxX);
+      y = clamp(y, minY, maxY);
 
       noBtn.style.left = `${x}px`;
       noBtn.style.top  = `${y}px`;
@@ -774,8 +845,6 @@
       el.style.setProperty('--dy', dy + "px");
       el.style.setProperty('--s', s.toFixed(2));
       el.style.setProperty('--r', r);
-
-      // vary size a bit
       el.style.fontSize = (16 + Math.random()*16) + "px";
 
       fx.appendChild(el);
@@ -787,14 +856,8 @@
       const x = (r.left + r.right)/2;
       const y = (r.top + r.bottom)/2;
 
-      // burst
-      for(let i=0;i<14;i++){
-        setTimeout(() => spawnPopHeart(x, y), i*12);
-      }
-      // a small trailing drizzle
-      for(let i=0;i<8;i++){
-        setTimeout(() => spawnPopHeart(x + (Math.random()*40-20), y + (Math.random()*20-10)), 220 + i*40);
-      }
+      for(let i=0;i<14;i++) setTimeout(() => spawnPopHeart(x, y), i*12);
+      for(let i=0;i<8;i++) setTimeout(() => spawnPopHeart(x + (Math.random()*40-20), y + (Math.random()*20-10)), 220 + i*40);
     }
 
     // ========= Loading =========
@@ -855,8 +918,11 @@
     }
 
     function runLoading(){
-      noBtn.style.opacity = '0';
-      noBtn.style.pointerEvents = 'none';
+      // hide roaming no
+      if(roamingEnabled){
+        noBtn.style.opacity = '0';
+        noBtn.style.pointerEvents = 'none';
+      }
 
       showScreen('screenLoad');
 
@@ -892,7 +958,6 @@
     }
 
     yesBtn.addEventListener('click', () => {
-      // pop first, then go loading
       popHeartsFromElement(yesBtn);
       setTimeout(runLoading, 420);
     });
