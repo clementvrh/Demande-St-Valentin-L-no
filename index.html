@@ -17,286 +17,241 @@
     }
 
     * { box-sizing: border-box; }
-
     html, body { height: 100%; }
+
     body{
       margin:0;
       font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background: radial-gradient(1200px 800px at 50% 20%, #fff 0%, var(--bg) 55%, #ffe8f0 100%);
       color: var(--text);
       overflow: hidden;
-
-      /* Cursor custom on desktop */
       cursor: none !important;
     }
-    button, a, input, label, textarea, select{
-      cursor: none !important; /* keep custom cursor even on click/hover */
-    }
+    button, a, input, label, textarea, select{ cursor: none !important; }
 
-    /* Default cursor on touch devices */
     @media (hover: none) and (pointer: coarse){
       body{ cursor: auto !important; }
-      #cursorDot{ display: none !important; }
-      button, a, input, label, textarea, select{ cursor: auto !important; }
+      #cursorDot{ display:none !important; }
+      button, a, input, label, textarea, select{ cursor:auto !important; }
     }
 
-    /* Custom cursor dot */
+    /* custom cursor */
     #cursorDot{
       position: fixed;
-      left: 0; top: 0;
-      width: 10px; height: 10px;
-      border-radius: 999px;
+      left:0; top:0;
+      width:10px; height:10px;
+      border-radius:999px;
       background: radial-gradient(circle at 35% 35%, #ffd1df 0%, var(--pink) 45%, var(--pink2) 100%);
-      box-shadow:
-        0 0 16px rgba(255,47,107,.30),
-        0 0 30px rgba(255,47,107,.16);
+      box-shadow: 0 0 16px rgba(255,47,107,.30), 0 0 30px rgba(255,47,107,.16);
       transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0;
+      pointer-events:none;
+      z-index:9999;
+      opacity:0;
       transition: opacity .15s ease;
       will-change: transform;
     }
 
-    /* Background floating hearts */
-    #bg{
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
+    /* BG hearts */
+    #bg{ position: fixed; inset:0; overflow:hidden; pointer-events:none; }
     .bubble-heart{
-      position: absolute;
-      bottom: -60px;
-      left: 0;
-      font-size: 18px;
-      opacity: .18;
-      transform: translate3d(0,0,0);
+      position:absolute; bottom:-60px; left:0;
+      font-size:18px; opacity:.18;
       animation: floatUp linear forwards;
       will-change: transform, opacity;
-      text-shadow: 0 10px 25px rgba(255, 77, 121, .22);
+      text-shadow: 0 10px 25px rgba(255,77,121,.22);
       filter: drop-shadow(0 10px 20px rgba(255,77,121,.16));
     }
     @keyframes floatUp{
-      0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0; }
-      10%  { opacity: var(--o, .22); }
-      90%  { opacity: var(--o, .22); }
-      100% { transform: translate3d(var(--dx, 0px), -120vh, 0) scale(var(--s, 1)); opacity: 0; }
+      0% { transform: translate3d(0,0,0) scale(1); opacity:0; }
+      10%{ opacity: var(--o,.22); }
+      90%{ opacity: var(--o,.22); }
+      100%{ transform: translate3d(var(--dx,0px), -120vh, 0) scale(var(--s,1)); opacity:0; }
     }
 
-    /* Layout */
     .stage{
-      position: relative;
-      height: 100%;
-      display: grid;
-      place-items: center;
-      padding: 24px;
+      position:relative;
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:24px;
     }
 
     .card{
-      width: min(900px, 94vw);
-      border-radius: 22px;
+      width:min(900px, 94vw);
+      min-height:380px;
+      border-radius:22px;
       background: rgba(255,255,255,.55);
       backdrop-filter: blur(10px);
       box-shadow: 0 20px 60px rgba(0,0,0,.07);
       border: 1px solid rgba(255,255,255,.55);
-      position: relative;
-      overflow: visible; /* allow final photos to overlap outside */
-      min-height: 380px;
+      position:relative;
+      overflow: visible; /* allow final photos overlap */
     }
 
-    /* Screens: smooth fade */
     .screen{
-      position: absolute;
-      inset: 0;
-      padding: 34px 18px;
-      opacity: 0;
+      position:absolute; inset:0;
+      padding:34px 18px;
+      opacity:0;
       transform: translateY(10px);
-      pointer-events: none;
+      pointer-events:none;
       transition: opacity .55s var(--ease), transform .55s var(--ease);
-      text-align: center;
+      text-align:center;
     }
     .screen.active{
-      opacity: 1;
+      opacity:1;
       transform: translateY(0);
-      pointer-events: auto;
+      pointer-events:auto;
     }
 
-    /* Top hearts (screen 1) */
+    /* top hearts */
     .hearts-top{
-      display:flex;
-      gap: 10px;
-      justify-content:center;
-      align-items:center;
-      margin-bottom: 8px;
-      height: 52px;
+      display:flex; gap:10px;
+      justify-content:center; align-items:center;
+      margin-bottom:8px; height:52px;
     }
     .heart{
-      width: 32px;
-      height: 32px;
-      position: relative;
+      width:32px; height:32px;
+      position:relative;
       transform: rotate(-45deg);
       background: var(--pink);
-      border-radius: 7px;
+      border-radius:7px;
       animation: beat 1.2s ease-in-out infinite;
-      filter:
-        drop-shadow(0 12px 18px rgba(255,77,121,.22))
-        drop-shadow(0 0 14px rgba(255,77,121,.22));
+      filter: drop-shadow(0 12px 18px rgba(255,77,121,.22)) drop-shadow(0 0 14px rgba(255,77,121,.22));
     }
-    .heart::before,
-    .heart::after{
+    .heart::before,.heart::after{
       content:"";
       position:absolute;
-      width: 32px;
-      height: 32px;
+      width:32px; height:32px;
       background: var(--pink);
-      border-radius: 50%;
+      border-radius:50%;
       filter: drop-shadow(0 0 12px rgba(255,77,121,.18));
     }
     .heart::before{ top:-16px; left:0; }
-    .heart::after { left:16px; top:0; }
-
-    .heart.small{
-      width: 22px; height: 22px;
-      opacity: .95;
-      animation-duration: 1.35s;
-    }
-    .heart.small::before,
-    .heart.small::after{
-      width: 22px; height: 22px;
-    }
+    .heart::after{ left:16px; top:0; }
+    .heart.small{ width:22px; height:22px; animation-duration:1.35s; opacity:.95; }
+    .heart.small::before,.heart.small::after{ width:22px; height:22px; }
     .heart.small::before{ top:-11px; }
     .heart.small::after{ left:11px; }
 
     @keyframes beat{
-      0%, 100% { transform: rotate(-45deg) scale(1); }
-      18% { transform: rotate(-45deg) scale(1.08); }
-      36% { transform: rotate(-45deg) scale(0.98); }
-      54% { transform: rotate(-45deg) scale(1.12); }
-      72% { transform: rotate(-45deg) scale(1.00); }
+      0%,100%{ transform: rotate(-45deg) scale(1); }
+      18%{ transform: rotate(-45deg) scale(1.08); }
+      36%{ transform: rotate(-45deg) scale(.98); }
+      54%{ transform: rotate(-45deg) scale(1.12); }
+      72%{ transform: rotate(-45deg) scale(1); }
     }
 
     h1{
       font-size: clamp(26px, 3.2vw, 40px);
-      line-height: 1.15;
-      margin: 10px 0 18px;
-      letter-spacing: .2px;
+      line-height:1.15;
+      margin:10px 0 18px;
     }
     .name{
-      font-weight: 950;
+      font-weight:950;
       background: linear-gradient(90deg, var(--pink2), #ff7aa2);
-      -webkit-background-clip: text;
-      background-clip: text;
+      -webkit-background-clip:text; background-clip:text;
       color: transparent;
       white-space: nowrap;
     }
 
-    /* Buttons row: YES + NO centered together */
     .buttons{
       display:flex;
-      gap: 12px;
+      gap:12px;
       justify-content:center;
       align-items:center;
-      margin-top: 18px;
-      height: 58px;
+      margin-top:18px;
+      height:58px;
     }
-
     button{
-      border: 0;
-      padding: 12px 18px;
-      border-radius: 999px;
-      font-weight: 950;
-      font-size: 16px;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      white-space: nowrap;
+      border:0;
+      padding:12px 18px;
+      border-radius:999px;
+      font-weight:950;
+      font-size:16px;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+      white-space:nowrap;
       transition: transform .12s ease, box-shadow .22s ease, background .22s ease, opacity .22s ease;
     }
-
     #yesBtn{
       background: var(--pink);
-      color: #fff;
+      color:#fff;
       box-shadow: var(--shadow);
-      min-width: 120px;
-      position: relative;
+      min-width:120px;
     }
     #yesBtn:hover{ transform: translateY(-1px); }
     #yesBtn:active{ transform: translateY(1px) scale(.99); }
 
-    /* NO button: starts in row, then roams (fixed) */
     #noBtn{
-      background: rgba(255, 77, 121, .10);
+      background: rgba(255,77,121,.10);
       color: var(--pink2);
-      border: 1px solid rgba(255, 77, 121, .25);
-      min-width: 130px;
+      border: 1px solid rgba(255,77,121,.25);
+      min-width:130px;
       box-shadow: 0 10px 24px rgba(0,0,0,.06);
       backdrop-filter: blur(8px);
     }
+    /* IMPORTANT: roaming uses top-left coordinates, no translate */
     #noBtn.fixedRoam{
       position: fixed;
-      left: 50%;
-      top: 62%;
-      transform: translate(-50%, -50%);
+      left: 0;
+      top: 0;
+      transform: none;
       z-index: 50;
-      transition:
-        left .18s var(--ease),
-        top  .18s var(--ease),
-        opacity .25s ease,
-        transform .12s ease;
+      transition: left .18s var(--ease), top .18s var(--ease), opacity .25s ease;
     }
 
-    /* Hint */
     .hint{
-      margin-top: 12px;
-      font-size: 13px;
+      margin-top:12px;
+      font-size:13px;
       color: rgba(0,0,0,.40);
-      font-weight: 850;
-      min-height: 18px;
-      opacity: 0;
+      font-weight:850;
+      min-height:18px;
+      opacity:0;
       transform: translateY(4px);
       transition: opacity .35s ease, transform .35s ease;
     }
-    .hint.show{
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .hint.show{ opacity:1; transform: translateY(0); }
 
-    /* FX layer */
-    #fx{
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9998;
-    }
+    /* FX */
+    #fx{ position:fixed; inset:0; pointer-events:none; z-index:9998; }
     .popHeart{
-      position: absolute;
-      left: 0; top: 0;
-      font-size: 18px;
-      transform: translate(-50%, -50%);
-      opacity: 0;
+      position:absolute;
+      transform: translate(-50%,-50%);
+      opacity:0;
       animation: popFly 900ms var(--ease) forwards;
       filter: drop-shadow(0 10px 18px rgba(255,47,107,.22));
       will-change: transform, opacity;
     }
     @keyframes popFly{
-      0%   { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
-      10%  { opacity: 1; }
-      100% {
-        opacity: 0;
-        transform:
-          translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, -120px)))
-          scale(var(--s, 1.25))
-          rotate(var(--r, 10deg));
+      0%{ opacity:0; transform: translate(-50%,-50%) scale(.6); }
+      10%{ opacity:1; }
+      100%{
+        opacity:0;
+        transform: translate(calc(-50% + var(--dx,0px)), calc(-50% + var(--dy,-120px))) scale(var(--s,1.25)) rotate(var(--r,10deg));
       }
     }
 
-    /* LOADING SCREEN: photo above panel, panel contains only bar + text */
+    /* LOADING: image ABOVE panel, panel contains only progress + text */
     .loadStage{
-      position: relative;
-      height: 100%;
-      display: grid;
-      place-items: center;
+      height:100%;
+      display:flex;
+      flex-direction: column;
+      align-items:center;
+      justify-content:center;
+      gap: 18px;
+      padding-top: 8px;
     }
+    #loadPhoto{
+      width: min(520px, 82vw);
+      height:auto;
+      max-height: 260px;
+      object-fit: contain;
+      opacity: 1;
+      transition: opacity .35s ease;
+      border-radius: 0; /* keep your polaroid styling */
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.12)); /* very light shadow */
+    }
+    #loadPhoto.fade{ opacity:0; }
 
     .loadPanel{
       width: min(560px, 86vw);
@@ -305,68 +260,44 @@
       border: 1px solid rgba(255,255,255,.55);
       box-shadow: 0 18px 50px rgba(0,0,0,.06);
       padding: 26px 18px 22px;
-      margin-top: 85px; /* leaves room for photo above */
     }
-
-    /* Photo ABOVE the panel, centered, no frame added */
-    #loadPhoto{
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translate(-50%, -8px);
-      width: min(520px, 82vw);
-      height: auto;
-      max-height: 260px;
-      object-fit: contain;
-      opacity: 1;
-      transition: opacity .35s ease;
-      filter: drop-shadow(0 14px 28px rgba(0,0,0,.12)); /* very light shadow */
-      border-radius: 0; /* keep your polaroid style as-is */
-    }
-    #loadPhoto.fade{ opacity: 0; }
 
     .loaderHeart{
-      width: 30px; height: 30px;
+      width:30px; height:30px;
       transform: rotate(-45deg);
       background: var(--pink2);
-      border-radius: 7px;
+      border-radius:7px;
       filter: drop-shadow(0 12px 25px rgba(255,47,107,.18));
       animation: beat 1.15s ease-in-out infinite;
-      position: relative;
+      position:relative;
       margin: 0 auto 10px;
     }
-    .loaderHeart::before, .loaderHeart::after{
+    .loaderHeart::before,.loaderHeart::after{
       content:"";
       position:absolute;
-      width: 30px; height: 30px;
+      width:30px; height:30px;
       background: var(--pink2);
-      border-radius: 50%;
+      border-radius:50%;
     }
     .loaderHeart::before{ top:-15px; left:0; }
-    .loaderHeart::after { left:15px; top:0; }
+    .loaderHeart::after{ left:15px; top:0; }
 
     .bar{
       width: min(440px, 80vw);
       height: 10px;
-      background: rgba(255, 77, 121, .15);
+      background: rgba(255,77,121,.15);
       border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 77, 121, .18);
+      overflow:hidden;
+      border: 1px solid rgba(255,77,121,.18);
       margin: 8px auto 10px;
     }
     .bar > i{
-      display:block;
-      height: 100%;
-      width: 0%;
+      display:block; height:100%; width:0%;
       background: linear-gradient(90deg, var(--pink2), #ff7aa2);
-      border-radius: 999px;
+      border-radius:999px;
       transition: width .18s var(--ease);
     }
-    .percent{
-      font-weight: 950;
-      color: var(--pink2);
-      margin-bottom: 8px;
-    }
+    .percent{ font-weight:950; color: var(--pink2); margin-bottom: 8px; font-size: 18px; }
     .loadingText{
       color: var(--muted);
       font-weight: 900;
@@ -374,91 +305,106 @@
       opacity: 1;
       transition: opacity .35s ease, transform .35s ease;
       transform: translateY(0);
+      font-size: 15px;
     }
-    .loadingText.fadeOut{
-      opacity: 0;
-      transform: translateY(6px);
-    }
+    .loadingText.fadeOut{ opacity:0; transform: translateY(6px); }
 
-    /* FINAL: single-piece heart with 3D look via SVG */
+    /* FINAL */
     .finalText{
       display:flex;
       flex-direction: column;
       align-items:center;
-      gap: 10px;
+      gap: 12px;
       max-width: 560px;
       margin: 0 auto;
-      padding-top: 12px;
+      padding-top: 10px;
     }
-    .finalHeartWrap{
-      width: 88px;
-      height: 88px;
-      filter: drop-shadow(0 14px 30px rgba(255,47,107,.22));
-      animation: finalBeat 1.25s ease-in-out infinite;
-      position: relative;
-    }
-    @keyframes finalBeat{
-      0%, 100% { transform: scale(1); }
-      18% { transform: scale(1.06); }
-      36% { transform: scale(.99); }
-      54% { transform: scale(1.09); }
-      72% { transform: scale(1.00); }
-    }
-    .subtitle{
+
+    .finalTitle{
+      font-size: clamp(40px, 4.2vw, 56px);
       margin: 0;
-      color: var(--muted);
-      font-weight: 900;
+      letter-spacing: .2px;
     }
-    .loveLine{
+    .finalSub{
+      margin: 0;
+      color: rgba(0,0,0,.55);
+      font-weight: 900;
+      font-size: 18px;
+    }
+    .finalLove{
       margin: 0;
       font-weight: 950;
+      font-size: 20px;
     }
 
-    /* FINAL PHOTOS: overlap top-right corner slightly, second overlaps bottom-right of first */
+    .finalHeartWrap{
+      width: 96px;
+      height: 96px;
+      animation: finalBeat 1.25s ease-in-out infinite;
+      filter: drop-shadow(0 16px 34px rgba(255,47,107,.22));
+    }
+    @keyframes finalBeat{
+      0%,100%{ transform: scale(1); }
+      18%{ transform: scale(1.06); }
+      36%{ transform: scale(.99); }
+      54%{ transform: scale(1.09); }
+      72%{ transform: scale(1.00); }
+    }
+
+    /* FINAL photos: 3 slots, overlap like a collage */
     .finalPolaroids{
-      position: absolute;
+      position:absolute;
       right: -120px;
       top: 28px;
+      width: 280px;
+      height: 520px;
+      pointer-events:none;
+    }
+    .slot{
+      position:absolute;
       width: 260px;
-      pointer-events: none;
+      height:auto;
+      border-radius: 0;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.14));
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .5s ease, transform .5s ease;
+      will-change: opacity, transform;
     }
-    .finalPolaroids img{
-      width: 260px;
-      height: auto;
-      display:block;
-      border-radius: 0; /* keep your own frame */
-      filter: drop-shadow(0 14px 28px rgba(0,0,0,.14)); /* subtle shadow only */
-    }
-    .finalPolaroid1{
-      position: absolute;
-      right: 0;
-      top: -6px;     /* eats a bit into the card top-right */
-      transform: rotate(6deg);
-    }
-    .finalPolaroid2{
-      position: absolute;
-      right: 6px;
-      top: 220px;    /* overlaps lower-right of first */
-      transform: rotate(-7deg);
+    .slot.show{
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* On smaller screens: place photos below, not outside */
+    /* Keep your current 2 positions */
+    .slot.pos1{ right:0; top:-6px; transform: rotate(6deg) translateY(6px); }
+    .slot.pos1.show{ transform: rotate(6deg) translateY(0); }
+
+    .slot.pos2{ right:6px; top:220px; transform: rotate(-7deg) translateY(6px); }
+    .slot.pos2.show{ transform: rotate(-7deg) translateY(0); }
+
+    /* New 3rd position (same logic, between the two) */
+    .slot.pos3{ right:-8px; top:120px; transform: rotate(3deg) translateY(6px); }
+    .slot.pos3.show{ transform: rotate(3deg) translateY(0); }
+
     @media (max-width: 980px){
       .finalPolaroids{
         position: static;
-        width: auto;
+        width:auto;
+        height:auto;
         margin: 18px auto 0;
         display:flex;
         gap: 14px;
         justify-content:center;
-        pointer-events: auto;
+        pointer-events:auto;
       }
-      .finalPolaroids img{
-        width: min(300px, 70vw);
+      .slot{
         position: static;
-        transform: none;
+        width: min(300px, 70vw);
+        transform:none !important;
+        opacity:1;
       }
-      .finalPolaroid2{ top:auto; }
+      .slot.show{ opacity:1; transform:none; }
     }
   </style>
 </head>
@@ -483,7 +429,7 @@
           veux-tu être ma Valentine ?
         </h1>
 
-        <div class="buttons" id="btnRow">
+        <div class="buttons">
           <button id="yesBtn">Oui ! 💞</button>
           <button id="noBtn">Non</button>
         </div>
@@ -491,111 +437,100 @@
         <div id="hint" class="hint"></div>
       </section>
 
-      <!-- SCREEN 2 (LOADING) -->
+      <!-- SCREEN 2 -->
       <section id="screenLoad" class="screen">
         <div class="loadStage">
           <img id="loadPhoto" src="assets/final1.png" alt="Nous - loading">
-
           <div class="loadPanel">
             <div class="loaderHeart"></div>
             <div class="bar"><i id="barFill"></i></div>
             <div class="percent"><span id="pct">0</span>%</div>
-            <div class="loadingText" id="loadingText">Réservation de la table au NŪ… 🍽️✨</div>
+            <div class="loadingText" id="loadingText">Chargement de l’amour en cours… 💘</div>
           </div>
         </div>
       </section>
 
-      <!-- SCREEN 3 (FINAL) -->
+      <!-- SCREEN 3 -->
       <section id="screenDone" class="screen">
         <div class="finalText">
           <div class="finalHeartWrap" aria-hidden="true">
-            <!-- Single-path heart SVG with 3D shading + glow -->
-            <svg viewBox="0 0 120 120" width="88" height="88">
+            <!-- normal heart, single shape, not squashed -->
+            <svg viewBox="0 0 120 120" width="96" height="96">
               <defs>
-                <radialGradient id="gMain" cx="35%" cy="30%" r="75%">
+                <radialGradient id="gMain" cx="35%" cy="28%" r="80%">
                   <stop offset="0%" stop-color="#ffd1df"/>
                   <stop offset="35%" stop-color="#ff6b97"/>
                   <stop offset="70%" stop-color="#ff2f6b"/>
                   <stop offset="100%" stop-color="#d80f4b"/>
                 </radialGradient>
-
-                <!-- soft highlight -->
-                <radialGradient id="gHi" cx="30%" cy="28%" r="55%">
-                  <stop offset="0%" stop-color="rgba(255,255,255,.85)"/>
-                  <stop offset="55%" stop-color="rgba(255,255,255,.12)"/>
+                <radialGradient id="gHi" cx="28%" cy="26%" r="55%">
+                  <stop offset="0%" stop-color="rgba(255,255,255,.90)"/>
+                  <stop offset="55%" stop-color="rgba(255,255,255,.14)"/>
                   <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
                 </radialGradient>
-
-                <!-- glow -->
-                <filter id="fGlow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="6" result="blur"/>
-                  <feColorMatrix in="blur" type="matrix"
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="5" result="b"/>
+                  <feColorMatrix in="b" type="matrix"
                     values="1 0 0 0 0
                             0 0.2 0 0 0
                             0 0 0.3 0 0
-                            0 0 0 0.35 0" result="pinkBlur"/>
+                            0 0 0 0.38 0" result="pb"/>
                   <feMerge>
-                    <feMergeNode in="pinkBlur"/>
+                    <feMergeNode in="pb"/>
                     <feMergeNode in="SourceGraphic"/>
                   </feMerge>
                 </filter>
-
-                <!-- subtle inner shadow for 3D -->
-                <filter id="fInner" x="-50%" y="-50%" width="200%" height="200%">
+                <filter id="inner" x="-50%" y="-50%" width="200%" height="200%">
                   <feOffset dx="0" dy="2"/>
-                  <feGaussianBlur stdDeviation="3" result="offBlur"/>
-                  <feComposite in="offBlur" in2="SourceAlpha" operator="arithmetic"
-                               k2="-1" k3="1" result="innerShadow"/>
-                  <feColorMatrix in="innerShadow" type="matrix"
+                  <feGaussianBlur stdDeviation="3" result="ob"/>
+                  <feComposite in="ob" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="is"/>
+                  <feColorMatrix in="is" type="matrix"
                     values="0 0 0 0 0
                             0 0 0 0 0
                             0 0 0 0 0
-                            0 0 0 .28 0"/>
+                            0 0 0 .26 0"/>
                   <feComposite in2="SourceGraphic" operator="over"/>
                 </filter>
               </defs>
 
-              <!-- glow base -->
-              <path filter="url(#fGlow)" d="M60 108
-                C58 106, 20 80, 20 48
-                C20 28, 34 18, 47 18
-                C55 18, 60 23, 60 23
-                C60 23, 65 18, 73 18
-                C86 18, 100 28, 100 48
-                C100 80, 62 106, 60 108 Z"
-                fill="url(#gMain)"/>
-
-              <!-- inner shading -->
-              <path filter="url(#fInner)" d="M60 108
-                C58 106, 20 80, 20 48
-                C20 28, 34 18, 47 18
-                C55 18, 60 23, 60 23
-                C60 23, 65 18, 73 18
-                C86 18, 100 28, 100 48
-                C100 80, 62 106, 60 108 Z"
-                fill="url(#gMain)"/>
-
-              <!-- highlight -->
-              <path d="M60 108
-                C58 106, 20 80, 20 48
-                C20 28, 34 18, 47 18
-                C55 18, 60 23, 60 23
-                C60 23, 65 18, 73 18
-                C86 18, 100 28, 100 48
-                C100 80, 62 106, 60 108 Z"
-                fill="url(#gHi)" opacity="0.55"/>
+              <!-- single heart path -->
+              <path filter="url(#glow)" fill="url(#gMain)"
+                d="M60 106
+                   C60 106, 18 78, 18 46
+                   C18 26, 34 16, 48 16
+                   C56 16, 60 21, 60 21
+                   C60 21, 64 16, 72 16
+                   C86 16, 102 26, 102 46
+                   C102 78, 60 106, 60 106 Z" />
+              <path filter="url(#inner)" fill="url(#gMain)"
+                d="M60 106
+                   C60 106, 18 78, 18 46
+                   C18 26, 34 16, 48 16
+                   C56 16, 60 21, 60 21
+                   C60 21, 64 16, 72 16
+                   C86 16, 102 26, 102 46
+                   C102 78, 60 106, 60 106 Z" />
+              <path fill="url(#gHi)" opacity="0.55"
+                d="M60 106
+                   C60 106, 18 78, 18 46
+                   C18 26, 34 16, 48 16
+                   C56 16, 60 21, 60 21
+                   C60 21, 64 16, 72 16
+                   C86 16, 102 26, 102 46
+                   C102 78, 60 106, 60 106 Z" />
             </svg>
           </div>
 
-          <h1>Yeees&nbsp;!</h1>
-          <p class="subtitle">Je savais que tu allais dire oui 💞</p>
-          <p class="loveLine">Je t’aime ma Léno ❤️</p>
+          <h2 class="finalTitle">Yeees&nbsp;!</h2>
+          <p class="finalSub">Je savais que tu allais dire oui 💞</p>
+          <p class="finalLove">Je t’aime ma Léno ❤️</p>
         </div>
 
-        <!-- Overlapping polaroids -->
+        <!-- 3 slots (positions pos1 pos2 kept, pos3 added). JS rotates images -->
         <div class="finalPolaroids" aria-label="Polaroids">
-          <img class="finalPolaroid1" src="assets/final9.png" alt="Nous - polaroid 1">
-          <img class="finalPolaroid2" src="assets/final2.png" alt="Nous - polaroid 2">
+          <img id="slot1" class="slot pos1" alt="photo 1">
+          <img id="slot2" class="slot pos2" alt="photo 2">
+          <img id="slot3" class="slot pos3" alt="photo 3">
         </div>
       </section>
 
@@ -603,9 +538,9 @@
   </div>
 
   <script>
-    // ========= Custom cursor (smooth follow) =========
+    // ========= cursor =========
     const cursorDot = document.getElementById('cursorDot');
-    let curX = window.innerWidth / 2, curY = window.innerHeight / 2;
+    let curX = innerWidth/2, curY = innerHeight/2;
     let targetX = curX, targetY = curY;
     let cursorVisible = false;
 
@@ -617,21 +552,20 @@
     }
     cursorLoop();
 
-    window.addEventListener('mousemove', (e) => {
-      targetX = e.clientX;
-      targetY = e.clientY;
+    addEventListener('mousemove', (e) => {
+      targetX = e.clientX; targetY = e.clientY;
       if(!cursorVisible){
         cursorVisible = true;
         cursorDot.style.opacity = '1';
       }
-    }, { passive:true });
+    }, {passive:true});
 
-    window.addEventListener('mouseleave', () => {
+    addEventListener('mouseleave', () => {
       cursorVisible = false;
       cursorDot.style.opacity = '0';
     });
 
-    // ========= Background hearts =========
+    // ========= background hearts =========
     const bg = document.getElementById('bg');
     const heartChars = ["❤","💗","💖","💘","💞","💕"];
 
@@ -640,7 +574,7 @@
       el.className = 'bubble-heart';
       el.textContent = heartChars[(Math.random()*heartChars.length)|0];
 
-      const vw = window.innerWidth;
+      const vw = innerWidth;
       const x = Math.random() * vw;
       const size = 14 + Math.random()*22;
       const drift = (Math.random()*2 - 1) * 120;
@@ -660,24 +594,18 @@
     setInterval(spawnBubble, 260);
     for(let i=0;i<10;i++) setTimeout(spawnBubble, i*80);
 
-    // ========= Screens =========
+    // ========= screens =========
     function showScreen(id){
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    // ========= No button logic =========
+    // ========= NO button =========
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
     const hintEl = document.getElementById('hint');
 
-    const noFirst = [
-      "Non",
-      "T’es sûre ?",
-      "Réfléchis mieux…",
-      "Allez 😇",
-      "Tu vas cliquer “Oui” 😌"
-    ];
+    const noFirst = ["Non","T’es sûre ?","Réfléchis mieux…","Allez 😇","Tu vas cliquer “Oui” 😌"];
 
     const noRandomPool = [
       "On sait tous les deux que tu vas dire oui 😌",
@@ -703,7 +631,6 @@
       "Le ‘Oui’ est juste là 👉"
     ];
 
-    // Hint changes every 2 interactions, locks on 6th change
     const hintSteps = [
       "PS : le bouton “Non” est un peu timide 😇",
       "Indice : il aime bien se sauver au dernier moment 😏",
@@ -718,11 +645,11 @@
     let roamingEnabled = false;
     let lastMoveAt = 0;
 
-    const COOLDOWN_MS = 280;
+    const COOLDOWN_MS = 260;
     const DODGE_RADIUS = 95;
     const PADDING = 10;
 
-    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+    const clamp = (v,min,max) => Math.max(min, Math.min(max, v));
 
     function setNoText(){
       if(noInteractions <= 5){
@@ -730,17 +657,15 @@
         return;
       }
       let idx;
-      do{
-        idx = (Math.random() * noRandomPool.length) | 0;
-      } while(noRandomPool.length > 1 && idx === lastRandomIdx);
-
+      do{ idx = (Math.random() * noRandomPool.length) | 0; }
+      while(noRandomPool.length > 1 && idx === lastRandomIdx);
       lastRandomIdx = idx;
       noBtn.textContent = noRandomPool[idx];
     }
 
     function updateHint(){
       if(noInteractions < 1) return;
-      if(!hintEl.classList.contains('show')) hintEl.classList.add('show');
+      hintEl.classList.add('show');
       const step = clamp(Math.floor((noInteractions - 1) / 2), 0, hintSteps.length - 1);
       hintEl.textContent = hintSteps[step];
     }
@@ -748,20 +673,27 @@
     function enableRoaming(){
       if(roamingEnabled) return;
       roamingEnabled = true;
-
       noBtn.classList.add('fixedRoam');
 
+      // place it near where it was, but clamp by TOP-LEFT coordinates
       const r = noBtn.getBoundingClientRect();
-      const cx = (r.left + r.right)/2;
-      const cy = (r.top + r.bottom)/2;
+      placeNoAt(r.left, r.top);
+    }
 
-      // clamp immediately so it never starts off-screen
+    function placeNoAt(left, top){
+      // Use CURRENT size after text (can change width!)
+      const r = noBtn.getBoundingClientRect();
       const bw = r.width, bh = r.height;
-      const x = clamp(cx, bw/2 + PADDING, window.innerWidth - bw/2 - PADDING);
-      const y = clamp(cy, bh/2 + PADDING, window.innerHeight - bh/2 - PADDING);
 
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top  = `${y}px`;
+      // If the button is bigger than available space, force inside
+      const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
+      const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
+
+      const safeLeft = clamp(left, PADDING, maxLeft);
+      const safeTop  = clamp(top,  PADDING, maxTop);
+
+      noBtn.style.left = `${safeLeft}px`;
+      noBtn.style.top  = `${safeTop}px`;
     }
 
     function moveNoButton(){
@@ -772,33 +704,48 @@
       noInteractions++;
       setNoText();
       updateHint();
-      if(noInteractions >= 1) enableRoaming();
+      enableRoaming();
 
+      // recompute after text set
       const r = noBtn.getBoundingClientRect();
       const bw = r.width, bh = r.height;
 
-      const minX = bw/2 + PADDING;
-      const maxX = window.innerWidth - bw/2 - PADDING;
-      const minY = bh/2 + PADDING;
-      const maxY = window.innerHeight - bh/2 - PADDING;
+      const minLeft = PADDING;
+      const minTop  = PADDING;
+      const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
+      const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
 
-      // avoid being too close to YES
-      const yesRect = yesBtn.getBoundingClientRect();
-      const yesCx = (yesRect.left + yesRect.right)/2;
-      const yesCy = (yesRect.top + yesRect.bottom)/2;
+      // If too small screen, just clamp to middle-ish
+      let left, top;
 
-      let x, y, tries = 0;
-      do{
-        x = minX + Math.random() * (maxX - minX);
-        y = minY + Math.random() * (maxY - minY);
+      if(maxLeft === PADDING){
+        left = PADDING;
+      } else {
+        left = minLeft + Math.random() * (maxLeft - minLeft);
+      }
+      if(maxTop === PADDING){
+        top = PADDING;
+      } else {
+        top = minTop + Math.random() * (maxTop - minTop);
+      }
+
+      // avoid YES area
+      const yesR = yesBtn.getBoundingClientRect();
+      const yesCx = (yesR.left + yesR.right)/2;
+      const yesCy = (yesR.top + yesR.bottom)/2;
+
+      let tries = 0;
+      while(tries < 30){
+        const cx = left + bw/2;
+        const cy = top + bh/2;
+        if(Math.hypot(cx - yesCx, cy - yesCy) >= 180) break;
+
+        left = (maxLeft === PADDING) ? PADDING : (minLeft + Math.random() * (maxLeft - minLeft));
+        top  = (maxTop  === PADDING) ? PADDING : (minTop  + Math.random() * (maxTop  - minTop));
         tries++;
-      } while(Math.hypot(x - yesCx, y - yesCy) < 180 && tries < 30);
+      }
 
-      x = clamp(x, minX, maxX);
-      y = clamp(y, minY, maxY);
-
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top  = `${y}px`;
+      placeNoAt(left, top);
     }
 
     function pointerNearNo(x, y){
@@ -808,24 +755,23 @@
       return Math.hypot(x - cx, y - cy) < DODGE_RADIUS;
     }
 
-    window.addEventListener('mousemove', (e) => {
+    addEventListener('mousemove', (e) => {
       if(!document.getElementById('screenAsk').classList.contains('active')) return;
       if(pointerNearNo(e.clientX, e.clientY)) moveNoButton();
-    }, { passive:true });
+    }, {passive:true});
 
-    window.addEventListener('touchstart', (e) => {
+    addEventListener('touchstart', (e) => {
       if(!document.getElementById('screenAsk').classList.contains('active')) return;
       const t = e.touches[0];
       if(t && pointerNearNo(t.clientX, t.clientY)) moveNoButton();
-    }, { passive:true });
+    }, {passive:true});
 
     noBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       if(document.getElementById('screenAsk').classList.contains('active')) moveNoButton();
     });
 
-    // ========= Pop hearts FX on YES =========
+    // ========= pop hearts on YES =========
     const fx = document.getElementById('fx');
     const popChars = ["💘","💞","💖","💕","❤","💗"];
 
@@ -855,35 +801,35 @@
       const r = el.getBoundingClientRect();
       const x = (r.left + r.right)/2;
       const y = (r.top + r.bottom)/2;
-
       for(let i=0;i<14;i++) setTimeout(() => spawnPopHeart(x, y), i*12);
       for(let i=0;i<8;i++) setTimeout(() => spawnPopHeart(x + (Math.random()*40-20), y + (Math.random()*20-10)), 220 + i*40);
     }
 
-    // ========= Loading =========
+    // ========= loading =========
     const barFill = document.getElementById('barFill');
     const pct = document.getElementById('pct');
     const loadingText = document.getElementById('loadingText');
     const loadPhoto = document.getElementById('loadPhoto');
 
+    // IMPORTANT: reservation phrase last
     const loadingPhrases = [
-      "Réservation de la table au NŪ… 🍽️✨",
       "Chargement de l’amour en cours… 💘",
       "Préparation des sentiments… 💞",
       "Assemblage des bisous… 😘",
       "Polissage de la bague… 💍",
       "Ajout de câlins illimités… 🫶",
-      "Mon amour… ❤️"
+      "Mon amour… ❤️",
+      "Réservation de la table au NŪ… 🍽️✨"
     ];
 
     function easeInOutCubic(t){
       return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
     }
 
-    function setLoadingPhrase(i){
+    function setLoadingPhraseSmooth(txt){
       loadingText.classList.add('fadeOut');
       setTimeout(() => {
-        loadingText.textContent = loadingPhrases[i];
+        loadingText.textContent = txt;
         loadingText.classList.remove('fadeOut');
       }, 240);
     }
@@ -917,8 +863,12 @@
       return timer;
     }
 
+    function showScreen(id){
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
     function runLoading(){
-      // hide roaming no
       if(roamingEnabled){
         noBtn.style.opacity = '0';
         noBtn.style.pointerEvents = 'none';
@@ -929,14 +879,27 @@
       const totalMs = 5800;
       const slideTimer = startSlideshow(totalMs);
 
-      const start = performance.now();
-      let phraseIndex = 0;
-      loadingText.textContent = loadingPhrases[0];
+      // Schedule phrases so last stays >= 1200ms
+      // 7 phrases -> 6 switches + last for 1200ms
+      const lastHold = 1200;
+      const tLast = totalMs - lastHold; // moment where last phrase appears
 
-      const phraseTimer = setInterval(() => {
-        phraseIndex = Math.min(phraseIndex + 1, loadingPhrases.length - 1);
-        setLoadingPhrase(phraseIndex);
-      }, 950);
+      const schedule = [
+        { t:   0, txt: loadingPhrases[0] },
+        { t: 900, txt: loadingPhrases[1] },
+        { t:1800, txt: loadingPhrases[2] },
+        { t:2700, txt: loadingPhrases[3] },
+        { t:3600, txt: loadingPhrases[4] },
+        { t:4500, txt: loadingPhrases[5] },
+        { t:tLast, txt: loadingPhrases[6] } // reservation at the end, readable
+      ];
+
+      // run schedule
+      for(const s of schedule){
+        setTimeout(() => setLoadingPhraseSmooth(s.txt), s.t);
+      }
+
+      const start = performance.now();
 
       function tick(now){
         const raw = clamp((now - start) / totalMs, 0, 1);
@@ -949,17 +912,90 @@
         if(raw < 1){
           requestAnimationFrame(tick);
         } else {
-          clearInterval(phraseTimer);
           if(slideTimer) clearInterval(slideTimer);
-          setTimeout(() => showScreen('screenDone'), 420);
+          setTimeout(() => {
+            showScreen('screenDone');
+            startFinalCarousel(); // start looping photos
+          }, 420);
         }
       }
       requestAnimationFrame(tick);
     }
 
+    // ========= FINAL photo carousel (3 max, every 3s, infinite) =========
+    const slotEls = [
+      document.getElementById('slot1'),
+      document.getElementById('slot2'),
+      document.getElementById('slot3')
+    ];
+
+    // you can reorder / choose which images cycle here
+    const finalCyclePhotos = [
+      "assets/final9.png",
+      "assets/final2.png",
+      "assets/final8.png",
+      "assets/final7.png",
+      "assets/final6.png",
+      "assets/final5.png",
+      "assets/final4.png",
+      "assets/final3.png",
+      "assets/final1.png"
+    ];
+
+    let finalStarted = false;
+    let finalIdx = 0;
+    let slotIdx = 0;
+    let z = 10;
+    let finalTimer = null;
+
+    function showInSlot(slotEl, src){
+      slotEl.classList.remove('show');
+      // small fade-out then swap then fade-in
+      setTimeout(() => {
+        slotEl.src = src;
+        slotEl.style.zIndex = String(++z);
+        slotEl.classList.add('show');
+      }, 90);
+    }
+
+    function startFinalCarousel(){
+      if(finalStarted) return;
+      finalStarted = true;
+
+      // reset
+      slotEls.forEach(s => { s.classList.remove('show'); s.src = ""; s.style.zIndex = "0"; });
+      finalIdx = 0;
+      slotIdx = 0;
+      z = 10;
+
+      // first 3 appear gradually (every 3s)
+      const step = () => {
+        const slot = slotEls[slotIdx % 3];
+        const src = finalCyclePhotos[finalIdx % finalCyclePhotos.length];
+        showInSlot(slot, src);
+
+        finalIdx++;
+        slotIdx++;
+
+        // continue forever
+        finalTimer = setTimeout(step, 3000);
+      };
+
+      step();
+    }
+
+    // YES click
     yesBtn.addEventListener('click', () => {
       popHeartsFromElement(yesBtn);
       setTimeout(runLoading, 420);
+    });
+
+    // Keep the roaming button clamped on resize
+    addEventListener('resize', () => {
+      if(roamingEnabled){
+        const r = noBtn.getBoundingClientRect();
+        placeNoAt(r.left, r.top);
+      }
     });
   </script>
 </body>
