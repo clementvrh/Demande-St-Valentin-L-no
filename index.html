@@ -150,7 +150,6 @@
       min-height: 96px;
     }
 
-    /* NAME glow coloring at end */
     .name{
       font-weight:950;
       color: var(--text);
@@ -165,16 +164,13 @@
       100%{ color: var(--pink2); text-shadow: 0 0 0 rgba(255,47,107,0); }
     }
 
-    /* typewriter: smoother per char */
     .twChar{
       display:inline-block;
       opacity:0;
       transform: translateY(10px);
       animation: twIn 620ms cubic-bezier(.18,.82,.24,1) forwards;
     }
-    @keyframes twIn{
-      to{ opacity:1; transform: translateY(0); }
-    }
+    @keyframes twIn{ to{ opacity:1; transform: translateY(0); } }
 
     .buttons{
       display:flex;
@@ -202,14 +198,14 @@
       min-width:120px;
     }
 
-    /* ✅ stable NO width so long text doesn't break placement */
+    /* NO stays simple and stable */
     #noBtn{
       background: rgba(255,77,121,.10);
       color: var(--pink2);
       border: 1px solid rgba(255,77,121,.25);
-      width: 220px;
-      max-width: 220px;
-      overflow: hidden;
+      width: 180px;
+      max-width: 180px;
+      overflow:hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       box-shadow: 0 10px 24px rgba(0,0,0,.06);
@@ -381,32 +377,10 @@
 
     .slot.pos1{ right:0; top:-6px; transform: rotate(6deg) translateY(6px); }
     .slot.pos1.show{ transform: rotate(6deg) translateY(0); }
-
     .slot.pos2{ right:-16px; top:245px; transform: rotate(-7deg) translateY(6px); }
     .slot.pos2.show{ transform: rotate(-7deg) translateY(0); }
-
     .slot.pos3{ right:-62px; top:145px; transform: rotate(3deg) translateY(6px); }
     .slot.pos3.show{ transform: rotate(3deg) translateY(0); }
-
-    @media (max-width: 980px){
-      .finalPolaroids{
-        position: static;
-        width:auto;
-        height:auto;
-        margin: 18px auto 0;
-        display:flex;
-        gap:14px;
-        justify-content:center;
-        pointer-events:auto;
-      }
-      .slot{
-        position: static;
-        width: min(300px, 70vw);
-        transform:none !important;
-        opacity:1;
-      }
-      .slot.show{ opacity:1; transform:none; }
-    }
   </style>
 </head>
 
@@ -564,9 +538,16 @@
     }
     typewriter(titleEl);
 
-    // ===== texts =====
-    const noFirst = ["Non","T’es sûre ?","Réfléchis mieux…","Allez 😇","Tu vas cliquer “Oui” 😌"];
-    const noRandomPool = [
+    // ===== texts for the static phrase (5 ordered then random forever) =====
+    const staticFirst = [
+      "PS : le bouton “Non” est un peu timide 😇",
+      "Indice : il aime bien se sauver au dernier moment 😏",
+      "Tu peux essayer… mais il est très sportif 🏃‍♀️💨",
+      "Je crois qu’il a peur de ton doigt 😂",
+      "Plus tu insistes… plus il panique 😭"
+    ];
+
+    const staticRandom = [
       "On sait tous les deux que tu vas dire oui 😌",
       "Le destin a déjà choisi 💘",
       "Le bouton “Oui” te regarde 👀",
@@ -593,53 +574,25 @@
       "Ça lag… clique Oui pour réparer 🛠️"
     ];
 
-    const hintSteps = [
-      "PS : le bouton “Non” est un peu timide 😇",
-      "Indice : il aime bien se sauver au dernier moment 😏",
-      "Tu peux essayer… mais il est très sportif 🏃‍♀️💨",
-      "Je crois qu’il a peur de ton doigt 😂",
-      "Plus tu insistes… plus il panique 😭",
-      "Il faut cliquer sur oui ma Léno... ❤️"
-    ];
-
-    // ===== NO button logic: "first version" style, but stable =====
     const yesBtn = document.getElementById('yesBtn');
     const noBtn = document.getElementById('noBtn');
     const hintEl = document.getElementById('hint');
 
-    const SAFE_MARGIN = 26;   // safety margin so it never touches the edges
-    const NEAR = 90;
-    const FAR  = 170;
+    // ===== robust "around the card" movement =====
+    const SAFE_MARGIN = 26;     // never touch edges
+    const RING_GAP = 16;        // distance from card
+    const RING_THICK = 130;     // thickness around card
+    const NEAR = 95;            // trigger distance
+    const FAR  = 170;           // re-arm distance
     const COOLDOWN = 260;
 
     let armed = true;
     let lastMoveAt = 0;
     let roaming = false;
-
-    let noInteractions = 0;
-    let lastRandomIdx = -1;
+    let staticCount = 0;
+    let lastIdx = -1;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
-
-    function setNoText(){
-      noInteractions++;
-      if(noInteractions <= 5){
-        noBtn.textContent = noFirst[noInteractions - 1];
-        return;
-      }
-      let idx;
-      do { idx = (Math.random()*noRandomPool.length)|0; }
-      while(noRandomPool.length > 1 && idx === lastRandomIdx);
-      lastRandomIdx = idx;
-      noBtn.textContent = noRandomPool[idx];
-    }
-
-    function updateHint(){
-      if(noInteractions < 1) return;
-      hintEl.classList.add('show');
-      const step = clamp(Math.floor((noInteractions - 1)/2), 0, hintSteps.length-1);
-      hintEl.textContent = hintSteps[step];
-    }
 
     function enableRoamOnce(){
       if(roaming) return;
@@ -647,38 +600,95 @@
       noBtn.classList.add('roam');
       const r = noBtn.getBoundingClientRect();
       noBtn.style.left = r.left + "px";
-      noBtn.style.top  = r.top + "px";
+      noBtn.style.top  = r.top  + "px";
     }
 
-    function placeNoRandom(){
+    function pickStaticText(){
+      staticCount++;
+      if(staticCount <= staticFirst.length) return staticFirst[staticCount - 1];
+
+      // random forever
+      let idx;
+      do { idx = (Math.random()*staticRandom.length)|0; }
+      while(staticRandom.length > 1 && idx === lastIdx);
+      lastIdx = idx;
+      return staticRandom[idx];
+    }
+
+    function setStaticText(){
+      hintEl.classList.add('show');
+      hintEl.textContent = pickStaticText();
+    }
+
+    function getRingZones(btnW, btnH){
+      const c = card.getBoundingClientRect();
+      const zones = [];
+
+      // top band
+      zones.push({ x: c.left - RING_THICK, y: c.top - (RING_THICK), w: (c.right-c.left)+2*RING_THICK, h: RING_THICK });
+      // bottom band
+      zones.push({ x: c.left - RING_THICK, y: c.bottom, w: (c.right-c.left)+2*RING_THICK, h: RING_THICK });
+      // left band
+      zones.push({ x: c.left - RING_THICK, y: c.top, w: RING_THICK, h: (c.bottom-c.top) });
+      // right band
+      zones.push({ x: c.right, y: c.top, w: RING_THICK, h: (c.bottom-c.top) });
+
+      // clamp to viewport + gap + safe margin
+      const cleaned = zones.map(z => {
+        const x1 = Math.max(SAFE_MARGIN, z.x + RING_GAP);
+        const y1 = Math.max(SAFE_MARGIN, z.y + RING_GAP);
+        const x2 = Math.min(innerWidth - SAFE_MARGIN,  z.x + z.w - RING_GAP);
+        const y2 = Math.min(innerHeight - SAFE_MARGIN, z.y + z.h - RING_GAP);
+        return { x1, y1, w: Math.max(0, x2-x1), h: Math.max(0, y2-y1) };
+      }).filter(z => z.w >= btnW && z.h >= btnH);
+
+      return cleaned.map(z => ({
+        xMin: z.x1,
+        xMax: z.x1 + z.w - btnW,
+        yMin: z.y1,
+        yMax: z.y1 + z.h - btnH
+      }));
+    }
+
+    function randomPointInZones(zones){
+      const areas = zones.map(z => (z.xMax - z.xMin) * (z.yMax - z.yMin));
+      const total = areas.reduce((a,b)=>a+b,0);
+      let r = Math.random() * total;
+      let idx = 0;
+      while(r > areas[idx]){ r -= areas[idx]; idx++; }
+      const z = zones[idx];
+      return {
+        left: z.xMin + Math.random() * (z.xMax - z.xMin),
+        top:  z.yMin + Math.random() * (z.yMax - z.yMin)
+      };
+    }
+
+    function placeNoInRing(){
       const r = noBtn.getBoundingClientRect();
       const w = r.width, h = r.height;
+      const zones = getRingZones(w, h);
 
-      const minL = SAFE_MARGIN;
-      const minT = SAFE_MARGIN;
-      const maxL = Math.max(SAFE_MARGIN, innerWidth  - w - SAFE_MARGIN);
-      const maxT = Math.max(SAFE_MARGIN, innerHeight - h - SAFE_MARGIN);
-
-      let left = minL + Math.random() * (maxL - minL);
-      let top  = minT + Math.random() * (maxT - minT);
-
-      // avoid YES area
-      const yesR = yesBtn.getBoundingClientRect();
-      const yesCx = (yesR.left + yesR.right)/2;
-      const yesCy = (yesR.top + yesR.bottom)/2;
-
-      let tries = 0;
-      while(tries < 20){
-        const cx = left + w/2;
-        const cy = top + h/2;
-        if(Math.hypot(cx - yesCx, cy - yesCy) > 190) break;
+      // if very small screen => fallback safe random
+      let left, top;
+      if(!zones.length){
+        const minL = SAFE_MARGIN;
+        const minT = SAFE_MARGIN;
+        const maxL = Math.max(SAFE_MARGIN, innerWidth  - w - SAFE_MARGIN);
+        const maxT = Math.max(SAFE_MARGIN, innerHeight - h - SAFE_MARGIN);
         left = minL + Math.random() * (maxL - minL);
         top  = minT + Math.random() * (maxT - minT);
-        tries++;
+      } else {
+        const pos = randomPointInZones(zones);
+        left = pos.left;
+        top  = pos.top;
       }
 
-      noBtn.style.left = `${clamp(left, minL, maxL)}px`;
-      noBtn.style.top  = `${clamp(top,  minT, maxT)}px`;
+      // final clamp safety
+      left = clamp(left, SAFE_MARGIN, innerWidth - w - SAFE_MARGIN);
+      top  = clamp(top,  SAFE_MARGIN, innerHeight - h - SAFE_MARGIN);
+
+      noBtn.style.left = `${left}px`;
+      noBtn.style.top  = `${top}px`;
     }
 
     function distToNo(x,y){
@@ -688,15 +698,17 @@
       return Math.hypot(x - cx, y - cy);
     }
 
-    function moveNo(){
+    function moveNon(){
       const now = Date.now();
       if(now - lastMoveAt < COOLDOWN) return;
       lastMoveAt = now;
 
       enableRoamOnce();
-      setNoText();
-      updateHint();
-      placeNoRandom();
+      // NO TEXT NEVER CHANGES
+      noBtn.textContent = "Non";
+
+      setStaticText();
+      placeNoInRing();
     }
 
     addEventListener('mousemove', (e) => {
@@ -705,23 +717,19 @@
       if(d > FAR) armed = true;
       if(armed && d < NEAR){
         armed = false;
-        moveNo();
+        moveNon();
       }
     }, {passive:true});
 
     noBtn.addEventListener('click', (e) => {
       e.preventDefault(); e.stopPropagation();
-      moveNo();
+      moveNon();
     });
 
     addEventListener('resize', () => {
       if(!roaming) return;
-      const r = noBtn.getBoundingClientRect();
-      const w = r.width, h = r.height;
-      const left = clamp(r.left, SAFE_MARGIN, innerWidth - w - SAFE_MARGIN);
-      const top  = clamp(r.top,  SAFE_MARGIN, innerHeight - h - SAFE_MARGIN);
-      noBtn.style.left = left + "px";
-      noBtn.style.top  = top + "px";
+      // re-place inside ring, still safe
+      placeNoInRing();
     });
 
     // ===== pop hearts on yes =====
