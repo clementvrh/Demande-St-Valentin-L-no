@@ -7,35 +7,37 @@
 
   <style>
     :root{
-      --bg: #fff8fb;
-      --text: #2b2b2b;
-      --muted: #6b6b6b;
-      --pink: #ff4d79;
-      --pink2: #ff2f6b;
-      --shadow: 0 12px 30px rgba(255, 77, 121, .22);
-      --ease: cubic-bezier(.22,.61,.36,1);
+      --bg:#fff8fb;
+      --text:#2b2b2b;
+      --muted:#6b6b6b;
+      --pink:#ff4d79;
+      --pink2:#ff2f6b;
+      --shadow:0 12px 30px rgba(255,77,121,.22);
+      --ease:cubic-bezier(.22,.61,.36,1);
     }
     *{ box-sizing:border-box; }
-    html, body{ height:100%; }
+    html,body{ height:100%; }
 
     body{
       margin:0;
       font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background: radial-gradient(1200px 800px at 50% 20%, #fff 0%, var(--bg) 55%, #ffe8f0 100%);
-      color: var(--text);
+      color:var(--text);
       overflow:hidden;
       cursor:none !important;
     }
-    button, a, input, label, textarea, select{ cursor:none !important; }
+    button,a,input,label,textarea,select{ cursor:none !important; }
 
-    @media (hover: none) and (pointer: coarse){
+    @media (hover:none) and (pointer:coarse){
       body{ cursor:auto !important; }
       #cursorDot{ display:none !important; }
-      button, a, input, label, textarea, select{ cursor:auto !important; }
+      button,a,input,label,textarea,select{ cursor:auto !important; }
     }
 
+    /* custom cursor */
     #cursorDot{
-      position:fixed; left:0; top:0;
+      position:fixed;
+      left:0; top:0;
       width:10px; height:10px;
       border-radius:999px;
       background: radial-gradient(circle at 35% 35%, #ffd1df 0%, var(--pink) 45%, var(--pink2) 100%);
@@ -48,7 +50,7 @@
       will-change: transform;
     }
 
-    /* BG hearts */
+    /* background hearts */
     #bg{ position:fixed; inset:0; overflow:hidden; pointer-events:none; }
     .bubble-heart{
       position:absolute; bottom:-60px; left:0;
@@ -74,7 +76,7 @@
     }
 
     .card{
-      width:min(900px, 94vw);
+      width:min(900px,94vw);
       min-height:380px;
       border-radius:22px;
       background: rgba(255,255,255,.55);
@@ -85,11 +87,13 @@
       overflow: visible;
       transition: opacity .35s ease;
     }
+
+    /* during loading: remove big rectangle */
     .card.loadingMode{
       background: transparent;
       border-color: transparent;
-      box-shadow: none;
-      backdrop-filter: none;
+      box-shadow:none;
+      backdrop-filter:none;
     }
 
     .screen{
@@ -107,10 +111,14 @@
       pointer-events:auto;
     }
 
+    /* hearts top */
     .hearts-top{
-      display:flex; gap:10px;
-      justify-content:center; align-items:center;
-      margin-bottom:8px; height:52px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      align-items:center;
+      margin-bottom:8px;
+      height:52px;
     }
     .heart{
       width:32px; height:32px;
@@ -146,14 +154,26 @@
       font-size: clamp(26px, 3.2vw, 40px);
       line-height:1.15;
       margin:10px 0 18px;
-      min-height: 96px; /* keeps layout stable during typewriter */
+      min-height: 96px;
     }
     .name{
       font-weight:950;
       background: linear-gradient(90deg, var(--pink2), #ff7aa2);
-      -webkit-background-clip:text; background-clip:text;
+      -webkit-background-clip:text;
+      background-clip:text;
       color: transparent;
       white-space: nowrap;
+    }
+
+    /* typewriter letter animation */
+    .twChar{
+      display:inline-block;
+      transform: translateY(6px);
+      opacity:0;
+      animation: twIn 320ms cubic-bezier(.22,.61,.36,1) forwards;
+    }
+    @keyframes twIn{
+      to{ transform: translateY(0); opacity:1; }
     }
 
     .buttons{
@@ -197,8 +217,8 @@
     }
     #noBtn.fixedRoam{
       position: fixed;
-      left: 0; top: 0;
-      transform: none;
+      left:0; top:0;
+      transform:none;
       z-index: 50;
       transition: left .18s var(--ease), top .18s var(--ease), opacity .25s ease;
     }
@@ -215,7 +235,7 @@
     }
     .hint.show{ opacity:1; transform: translateY(0); }
 
-    /* FX */
+    /* FX pop hearts */
     #fx{ position:fixed; inset:0; pointer-events:none; z-index:9998; }
     .popHeart{
       position:absolute;
@@ -244,10 +264,11 @@
       gap: 18px;
       padding-top: 8px;
     }
+    /* bigger images */
     #loadPhoto{
-      width: min(520px, 82vw);
+      width: min(720px, 92vw);
       height:auto;
-      max-height: 260px;
+      max-height: 360px;
       object-fit: contain;
       opacity: 1;
       transition: opacity .35s ease;
@@ -264,6 +285,7 @@
       box-shadow: 0 18px 50px rgba(0,0,0,.06);
       padding: 26px 18px 22px;
     }
+
     .loaderHeart{
       width:30px; height:30px;
       transform: rotate(-45deg);
@@ -293,17 +315,19 @@
       margin: 8px auto 10px;
     }
     .bar > i{
-      display:block; height:100%; width:0%;
+      display:block;
+      height:100%;
+      width:0%;
       background: linear-gradient(90deg, var(--pink2), #ff7aa2);
       border-radius:999px;
       transition: width .18s var(--ease);
     }
-    .percent{ font-weight:950; color: var(--pink2); margin-bottom: 8px; font-size: 18px; }
+    .percent{ font-weight:950; color: var(--pink2); margin-bottom:8px; font-size:18px; }
     .loadingText{
       color: var(--muted);
       font-weight: 900;
       min-height: 22px;
-      opacity: 1;
+      opacity:1;
       transition: opacity .35s ease, transform .35s ease;
       transform: translateY(0);
       font-size: 15px;
@@ -324,10 +348,12 @@
     .finalSub{ margin:0; color: rgba(0,0,0,.55); font-weight:900; font-size:20px; }
     .finalLove{ margin:0; font-weight:950; font-size:22px; }
 
-    .finalHeartWrap{
-      width: 100px; height: 100px;
-      animation: finalBeat 1.25s ease-in-out infinite;
+    /* emoji heart */
+    .finalHeartEmoji{
+      font-size: 64px;
+      line-height: 1;
       filter: drop-shadow(0 16px 34px rgba(255,47,107,.22));
+      animation: finalBeat 1.25s ease-in-out infinite;
     }
     @keyframes finalBeat{
       0%,100%{ transform: scale(1); }
@@ -339,19 +365,18 @@
 
     .finalPolaroids{
       position:absolute;
-      right: -120px;
-      top: 28px;
-      width: 280px;
-      height: 520px;
+      right:-120px;
+      top:28px;
+      width:280px;
+      height:520px;
       pointer-events:none;
     }
     .slot{
       position:absolute;
-      width: 260px;
+      width:260px;
       height:auto;
-      border-radius: 0;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.14));
-      opacity: 0;
+      opacity:0;
       transition: opacity .5s ease, transform .5s ease;
     }
     .slot.show{ opacity:1; }
@@ -359,11 +384,9 @@
     .slot.pos1{ right:0; top:-6px; transform: rotate(6deg) translateY(6px); }
     .slot.pos1.show{ transform: rotate(6deg) translateY(0); }
 
-    /* pos2 slightly right and lower */
     .slot.pos2{ right:-16px; top:245px; transform: rotate(-7deg) translateY(6px); }
     .slot.pos2.show{ transform: rotate(-7deg) translateY(0); }
 
-    /* pos3 more to the right, between pos1 and pos2 */
     .slot.pos3{ right:-26px; top:145px; transform: rotate(3deg) translateY(6px); }
     .slot.pos3.show{ transform: rotate(3deg) translateY(0); }
 
@@ -374,7 +397,7 @@
         height:auto;
         margin: 18px auto 0;
         display:flex;
-        gap: 14px;
+        gap:14px;
         justify-content:center;
         pointer-events:auto;
       }
@@ -430,73 +453,7 @@
       <!-- SCREEN 3 -->
       <section id="screenDone" class="screen">
         <div class="finalText">
-          <div class="finalHeartWrap" aria-hidden="true">
-            <!-- heart: rounder -->
-            <svg viewBox="0 0 120 120" width="100" height="100">
-              <defs>
-                <radialGradient id="gMain" cx="35%" cy="28%" r="82%">
-                  <stop offset="0%" stop-color="#ffd1df"/>
-                  <stop offset="38%" stop-color="#ff6b97"/>
-                  <stop offset="72%" stop-color="#ff2f6b"/>
-                  <stop offset="100%" stop-color="#d80f4b"/>
-                </radialGradient>
-                <radialGradient id="gHi" cx="28%" cy="26%" r="60%">
-                  <stop offset="0%" stop-color="rgba(255,255,255,.92)"/>
-                  <stop offset="55%" stop-color="rgba(255,255,255,.16)"/>
-                  <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-                </radialGradient>
-                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="5" result="b"/>
-                  <feColorMatrix in="b" type="matrix"
-                    values="1 0 0 0 0
-                            0 .25 0 0 0
-                            0 0 .35 0 0
-                            0 0 0 .40 0" result="pb"/>
-                  <feMerge>
-                    <feMergeNode in="pb"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-                <filter id="inner" x="-50%" y="-50%" width="200%" height="200%">
-                  <feOffset dx="0" dy="2"/>
-                  <feGaussianBlur stdDeviation="3" result="ob"/>
-                  <feComposite in="ob" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="is"/>
-                  <feColorMatrix in="is" type="matrix"
-                    values="0 0 0 0 0
-                            0 0 0 0 0
-                            0 0 0 0 0
-                            0 0 0 .24 0"/>
-                  <feComposite in2="SourceGraphic" operator="over"/>
-                </filter>
-              </defs>
-
-              <path filter="url(#glow)" fill="url(#gMain)"
-                d="M60 109
-                   C60 109, 12 82, 12 46
-                   C12 24, 30 13, 47 13
-                   C57 13, 60 19, 60 19
-                   C60 19, 63 13, 73 13
-                   C90 13, 108 24, 108 46
-                   C108 82, 60 109, 60 109 Z" />
-              <path filter="url(#inner)" fill="url(#gMain)"
-                d="M60 109
-                   C60 109, 12 82, 12 46
-                   C12 24, 30 13, 47 13
-                   C57 13, 60 19, 60 19
-                   C60 19, 63 13, 73 13
-                   C90 13, 108 24, 108 46
-                   C108 82, 60 109, 60 109 Z" />
-              <path fill="url(#gHi)" opacity="0.55"
-                d="M60 109
-                   C60 109, 12 82, 12 46
-                   C12 24, 30 13, 47 13
-                   C57 13, 60 19, 60 19
-                   C60 19, 63 13, 73 13
-                   C90 13, 108 24, 108 46
-                   C108 82, 60 109, 60 109 Z" />
-            </svg>
-          </div>
-
+          <div class="finalHeartEmoji" aria-hidden="true">❤️</div>
           <h2 class="finalTitle">Yeees&nbsp;!</h2>
           <p class="finalSub">Je savais que tu allais dire oui 💞</p>
           <p class="finalLove">Je t’aime ma Léno ❤️</p>
@@ -529,15 +486,18 @@
 
     addEventListener('mousemove', (e) => {
       targetX = e.clientX; targetY = e.clientY;
-      if(!cursorVisible){ cursorVisible = true; cursorDot.style.opacity='1'; }
+      if(!cursorVisible){
+        cursorVisible = true;
+        cursorDot.style.opacity = '1';
+      }
     }, {passive:true});
 
     addEventListener('mouseleave', () => {
       cursorVisible = false;
-      cursorDot.style.opacity='0';
+      cursorDot.style.opacity = '0';
     });
 
-    // ===== BG hearts =====
+    // ===== background hearts =====
     const bg = document.getElementById('bg');
     const heartChars = ["❤","💗","💖","💘","💞","💕"];
     function spawnBubble(){
@@ -564,45 +524,52 @@
     setInterval(spawnBubble, 260);
     for(let i=0;i<10;i++) setTimeout(spawnBubble, i*80);
 
-    // ===== Screens =====
+    // ===== screens =====
     const card = document.getElementById('card');
     function showScreen(id){
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    // ===== Typewriter (smooth) for first screen =====
+    // ===== typewriter (slower + smooth) =====
     const titleEl = document.getElementById('questionTitle');
-    const fullTitle = `<span class="name">Lénora Deparis Verhoeven</span>,<br/>veux-tu être ma Valentine ?`;
+    const finalTitleHTML = `<span class="name">Lénora Deparis Verhoeven</span>,<br/>veux-tu être ma Valentine ?`;
 
-    function typewriterHTML(el, html, msPerChar = 18){
-      // We type plain text, but keep <span> formatting by splitting into tokens.
-      // Simple approach: render without span during typing, then swap to final HTML at end.
+    function typewriterHTML(el, finalHTML){
       const plain = "Lénora Deparis Verhoeven,\nveux-tu être ma Valentine ?";
-      el.textContent = "";
+      el.innerHTML = "";
       let i = 0;
+
+      const baseDelay = 42;
+      const jitterMax = 18;
+      const startDelay = 450;
 
       const step = () => {
         i++;
         const shown = plain.slice(0, i);
-        el.textContent = shown;
-        el.innerHTML = el.textContent.replace("\n","<br/>");
+
+        const lastChar = shown.slice(-1);
+        const before = shown.slice(0, -1).replace(/\n/g, "<br/>");
+
+        el.innerHTML =
+          before +
+          (lastChar && lastChar !== "\n" ? `<span class="twChar">${lastChar}</span>` : "");
+
         if(i < plain.length){
-          // slight randomness for a smooth feel
-          const jitter = (Math.random()*10)|0;
-          setTimeout(step, msPerChar + jitter);
+          const jitter = (Math.random()*jitterMax)|0;
+          setTimeout(step, baseDelay + jitter);
         } else {
-          // snap to final rich HTML
-          el.innerHTML = html;
+          el.innerHTML = finalHTML;
         }
       };
-      setTimeout(step, 200);
-    }
-    typewriterHTML(titleEl, fullTitle, 16);
 
-    // ===== No button logic: place ONLY in allowed zones around card =====
-    const noBtn = document.getElementById('noBtn');
+      setTimeout(step, startDelay);
+    }
+    typewriterHTML(titleEl, finalTitleHTML);
+
+    // ===== buttons / NO logic (ring around card) =====
     const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
     const hintEl = document.getElementById('hint');
 
     const noFirst = ["Non","T’es sûre ?","Réfléchis mieux…","Allez 😇","Tu vas cliquer “Oui” 😌"];
@@ -645,15 +612,22 @@
 
     const COOLDOWN_MS = 260;
     const NEAR_RADIUS = 95;
-    const FAR_RADIUS = 140;  // hysteresis: must exit this radius to re-arm
+    const FAR_RADIUS = 140;
     const PADDING = 12;
 
-    let armed = true; // hysteresis arming
+    // ring config (around the card)
+    const RING_GAP = 18;
+    const RING_THICKNESS = 120;
+
+    let armed = true;
 
     const clamp = (v,min,max) => Math.max(min, Math.min(max, v));
 
     function setNoText(){
-      if(noInteractions <= 5){ noBtn.textContent = noFirst[noInteractions - 1]; return; }
+      if(noInteractions <= 5){
+        noBtn.textContent = noFirst[noInteractions - 1];
+        return;
+      }
       let idx;
       do{ idx = (Math.random() * noRandomPool.length) | 0; }
       while(noRandomPool.length > 1 && idx === lastRandomIdx);
@@ -679,44 +653,23 @@
     function getAllowedZones(btnW, btnH){
       const c = card.getBoundingClientRect();
 
-      // Allowed zones are rectangles around the card (top, bottom, left, right) INSIDE viewport.
-      const zones = [];
+      const topBand = { x: c.left - RING_THICKNESS, y: c.top - RING_THICKNESS, w: (c.right-c.left)+2*RING_THICKNESS, h: RING_THICKNESS };
+      const bottomBand = { x: c.left - RING_THICKNESS, y: c.bottom, w: (c.right-c.left)+2*RING_THICKNESS, h: RING_THICKNESS };
+      const leftBand = { x: c.left - RING_THICKNESS, y: c.top, w: RING_THICKNESS, h: (c.bottom-c.top) };
+      const rightBand = { x: c.right, y: c.top, w: RING_THICKNESS, h: (c.bottom-c.top) };
+      const rawZones = [topBand, bottomBand, leftBand, rightBand];
 
-      // TOP zone
-      zones.push({
-        x: PADDING,
-        y: PADDING,
-        w: innerWidth - 2*PADDING,
-        h: Math.max(0, c.top - PADDING*2)
-      });
+      const clampZone = (z) => {
+        const x = Math.max(PADDING, z.x + RING_GAP);
+        const y = Math.max(PADDING, z.y + RING_GAP);
+        const x2 = Math.min(innerWidth - PADDING,  z.x + z.w - RING_GAP);
+        const y2 = Math.min(innerHeight - PADDING, z.y + z.h - RING_GAP);
+        return { x, y, w: Math.max(0, x2 - x), h: Math.max(0, y2 - y) };
+      };
 
-      // BOTTOM zone
-      zones.push({
-        x: PADDING,
-        y: c.bottom + PADDING,
-        w: innerWidth - 2*PADDING,
-        h: Math.max(0, innerHeight - (c.bottom + 2*PADDING))
-      });
-
-      // LEFT zone
-      zones.push({
-        x: PADDING,
-        y: c.top + PADDING,
-        w: Math.max(0, c.left - 2*PADDING),
-        h: Math.max(0, (c.bottom - c.top) - 2*PADDING)
-      });
-
-      // RIGHT zone
-      zones.push({
-        x: c.right + PADDING,
-        y: c.top + PADDING,
-        w: Math.max(0, innerWidth - (c.right + 2*PADDING)),
-        h: Math.max(0, (c.bottom - c.top) - 2*PADDING)
-      });
-
-      // filter zones where button fits
-      return zones
-        .filter(z => z.w >= btnW + PADDING && z.h >= btnH + PADDING)
+      return rawZones
+        .map(clampZone)
+        .filter(z => z.w >= btnW && z.h >= btnH)
         .map(z => ({
           xMin: z.x,
           xMax: z.x + z.w - btnW,
@@ -726,7 +679,6 @@
     }
 
     function randomPointInZones(zones){
-      // choose zone by area
       const areas = zones.map(z => (z.xMax - z.xMin) * (z.yMax - z.yMin));
       const total = areas.reduce((a,b)=>a+b,0);
       let r = Math.random() * total;
@@ -740,17 +692,12 @@
     }
 
     function placeNo(left, top){
-      // hard clamp into viewport (top-left coords)
       const r = noBtn.getBoundingClientRect();
       const bw = r.width, bh = r.height;
       const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
       const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
-
-      const L = clamp(left, PADDING, maxLeft);
-      const T = clamp(top,  PADDING, maxTop);
-
-      noBtn.style.left = `${L}px`;
-      noBtn.style.top  = `${T}px`;
+      noBtn.style.left = `${clamp(left, PADDING, maxLeft)}px`;
+      noBtn.style.top  = `${clamp(top,  PADDING, maxTop)}px`;
     }
 
     function moveNo(){
@@ -763,35 +710,12 @@
       updateHint();
       enableRoaming();
 
-      // after text change, recompute actual size
       requestAnimationFrame(() => {
         const r = noBtn.getBoundingClientRect();
         const bw = r.width, bh = r.height;
-
         const zones = getAllowedZones(bw, bh);
 
-        // fallback: if no zone available, just clamp to top-left (still inside screen)
-        let pos;
-        if(zones.length === 0){
-          pos = { left: PADDING, top: PADDING };
-        } else {
-          pos = randomPointInZones(zones);
-        }
-
-        // avoid YES vicinity (if possible)
-        const yesR = yesBtn.getBoundingClientRect();
-        const yesCx = (yesR.left + yesR.right)/2;
-        const yesCy = (yesR.top + yesR.bottom)/2;
-
-        let tries = 0;
-        while(tries < 25){
-          const cx = pos.left + bw/2;
-          const cy = pos.top + bh/2;
-          if(Math.hypot(cx - yesCx, cy - yesCy) >= 220) break;
-          pos = (zones.length ? randomPointInZones(zones) : { left: PADDING, top: PADDING });
-          tries++;
-        }
-
+        const pos = zones.length ? randomPointInZones(zones) : { left: PADDING, top: PADDING };
         placeNo(pos.left, pos.top);
       });
     }
@@ -806,7 +730,6 @@
     addEventListener('mousemove', (e) => {
       if(!document.getElementById('screenAsk').classList.contains('active')) return;
       const d = distToNo(e.clientX, e.clientY);
-
       if(d > FAR_RADIUS) armed = true;
       if(armed && d < NEAR_RADIUS){
         armed = false;
@@ -814,17 +737,9 @@
       }
     }, {passive:true});
 
-    addEventListener('touchstart', (e) => {
-      if(!document.getElementById('screenAsk').classList.contains('active')) return;
-      const t = e.touches[0];
-      if(!t) return;
-      const d = distToNo(t.clientX, t.clientY);
-      if(d < NEAR_RADIUS) moveNo();
-    }, {passive:true});
-
     noBtn.addEventListener('click', (e) => {
       e.preventDefault(); e.stopPropagation();
-      if(document.getElementById('screenAsk').classList.contains('active')) moveNo();
+      moveNo();
     });
 
     addEventListener('resize', () => {
@@ -834,7 +749,7 @@
       }
     });
 
-    // ===== pop hearts =====
+    // ===== pop hearts on yes =====
     const fx = document.getElementById('fx');
     const popChars = ["💘","💞","💖","💕","❤","💗"];
     function spawnPopHeart(x, y){
@@ -919,7 +834,9 @@
         noBtn.style.opacity = '0';
         noBtn.style.pointerEvents = 'none';
       }
+      // remove big rectangle on loading
       card.classList.add('loadingMode');
+
       showScreen('screenLoad');
 
       const totalMs = 5800;
