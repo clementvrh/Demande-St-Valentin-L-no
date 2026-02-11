@@ -85,7 +85,15 @@
       box-shadow: 0 20px 60px rgba(0,0,0,.07);
       border: 1px solid rgba(255,255,255,.55);
       position:relative;
-      overflow: visible; /* allow final photos overlap */
+      overflow: visible;
+      transition: opacity .35s ease;
+    }
+    /* We hide the big card visual ONLY during loading screen */
+    .card.loadingMode{
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
     }
 
     .screen{
@@ -187,10 +195,12 @@
       color: var(--pink2);
       border: 1px solid rgba(255,77,121,.25);
       min-width:130px;
+      max-width: 240px;               /* IMPORTANT: prevents impossible clamping */
+      overflow: hidden;
+      text-overflow: ellipsis;
       box-shadow: 0 10px 24px rgba(0,0,0,.06);
       backdrop-filter: blur(8px);
     }
-    /* IMPORTANT: roaming uses top-left coordinates, no translate */
     #noBtn.fixedRoam{
       position: fixed;
       left: 0;
@@ -231,7 +241,7 @@
       }
     }
 
-    /* LOADING: image ABOVE panel, panel contains only progress + text */
+    /* LOADING: photo above + small panel only */
     .loadStage{
       height:100%;
       display:flex;
@@ -248,8 +258,8 @@
       object-fit: contain;
       opacity: 1;
       transition: opacity .35s ease;
-      border-radius: 0; /* keep your polaroid styling */
-      filter: drop-shadow(0 14px 28px rgba(0,0,0,.12)); /* very light shadow */
+      border-radius: 0;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.12));
     }
     #loadPhoto.fade{ opacity:0; }
 
@@ -321,7 +331,7 @@
     }
 
     .finalTitle{
-      font-size: clamp(40px, 4.2vw, 56px);
+      font-size: clamp(44px, 4.6vw, 60px);
       margin: 0;
       letter-spacing: .2px;
     }
@@ -329,17 +339,17 @@
       margin: 0;
       color: rgba(0,0,0,.55);
       font-weight: 900;
-      font-size: 18px;
+      font-size: 20px;
     }
     .finalLove{
       margin: 0;
       font-weight: 950;
-      font-size: 20px;
+      font-size: 22px;
     }
 
     .finalHeartWrap{
-      width: 96px;
-      height: 96px;
+      width: 100px;
+      height: 100px;
       animation: finalBeat 1.25s ease-in-out infinite;
       filter: drop-shadow(0 16px 34px rgba(255,47,107,.22));
     }
@@ -351,7 +361,7 @@
       72%{ transform: scale(1.00); }
     }
 
-    /* FINAL photos: 3 slots, overlap like a collage */
+    /* FINAL photos */
     .finalPolaroids{
       position:absolute;
       right: -120px;
@@ -367,24 +377,21 @@
       border-radius: 0;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.14));
       opacity: 0;
-      transform: translateY(6px);
       transition: opacity .5s ease, transform .5s ease;
       will-change: opacity, transform;
     }
-    .slot.show{
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .slot.show{ opacity: 1; }
 
-    /* Keep your current 2 positions */
+    /* pos1 unchanged */
     .slot.pos1{ right:0; top:-6px; transform: rotate(6deg) translateY(6px); }
     .slot.pos1.show{ transform: rotate(6deg) translateY(0); }
 
-    .slot.pos2{ right:6px; top:220px; transform: rotate(-7deg) translateY(6px); }
+    /* pos2: slightly more right so it touches only bottom-right corner */
+    .slot.pos2{ right:-8px; top:235px; transform: rotate(-7deg) translateY(6px); }
     .slot.pos2.show{ transform: rotate(-7deg) translateY(0); }
 
-    /* New 3rd position (same logic, between the two) */
-    .slot.pos3{ right:-8px; top:120px; transform: rotate(3deg) translateY(6px); }
+    /* pos3: shifted right, between pos1 and pos2 */
+    .slot.pos3{ right:-18px; top:130px; transform: rotate(3deg) translateY(6px); }
     .slot.pos3.show{ transform: rotate(3deg) translateY(0); }
 
     @media (max-width: 980px){
@@ -415,7 +422,7 @@
   <div id="cursorDot" aria-hidden="true"></div>
 
   <div class="stage">
-    <div class="card">
+    <div class="card" id="card">
 
       <!-- SCREEN 1 -->
       <section id="screenAsk" class="screen active">
@@ -424,12 +431,12 @@
           <div class="heart small"></div>
         </div>
 
-        <h1>
+        <h1 id="questionTitle">
           <span class="name">Lénora Deparis Verhoeven</span>,<br/>
           veux-tu être ma Valentine ?
         </h1>
 
-        <div class="buttons">
+        <div class="buttons" id="btnRow">
           <button id="yesBtn">Oui ! 💞</button>
           <button id="noBtn">Non</button>
         </div>
@@ -454,27 +461,27 @@
       <section id="screenDone" class="screen">
         <div class="finalText">
           <div class="finalHeartWrap" aria-hidden="true">
-            <!-- normal heart, single shape, not squashed -->
-            <svg viewBox="0 0 120 120" width="96" height="96">
+            <!-- HEART: rounder / less skinny -->
+            <svg viewBox="0 0 120 120" width="100" height="100">
               <defs>
-                <radialGradient id="gMain" cx="35%" cy="28%" r="80%">
+                <radialGradient id="gMain" cx="35%" cy="28%" r="82%">
                   <stop offset="0%" stop-color="#ffd1df"/>
-                  <stop offset="35%" stop-color="#ff6b97"/>
-                  <stop offset="70%" stop-color="#ff2f6b"/>
+                  <stop offset="38%" stop-color="#ff6b97"/>
+                  <stop offset="72%" stop-color="#ff2f6b"/>
                   <stop offset="100%" stop-color="#d80f4b"/>
                 </radialGradient>
-                <radialGradient id="gHi" cx="28%" cy="26%" r="55%">
-                  <stop offset="0%" stop-color="rgba(255,255,255,.90)"/>
-                  <stop offset="55%" stop-color="rgba(255,255,255,.14)"/>
+                <radialGradient id="gHi" cx="28%" cy="26%" r="60%">
+                  <stop offset="0%" stop-color="rgba(255,255,255,.92)"/>
+                  <stop offset="55%" stop-color="rgba(255,255,255,.16)"/>
                   <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
                 </radialGradient>
                 <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                   <feGaussianBlur stdDeviation="5" result="b"/>
                   <feColorMatrix in="b" type="matrix"
                     values="1 0 0 0 0
-                            0 0.2 0 0 0
-                            0 0 0.3 0 0
-                            0 0 0 0.38 0" result="pb"/>
+                            0 .25 0 0 0
+                            0 0 .35 0 0
+                            0 0 0 .40 0" result="pb"/>
                   <feMerge>
                     <feMergeNode in="pb"/>
                     <feMergeNode in="SourceGraphic"/>
@@ -488,36 +495,36 @@
                     values="0 0 0 0 0
                             0 0 0 0 0
                             0 0 0 0 0
-                            0 0 0 .26 0"/>
+                            0 0 0 .24 0"/>
                   <feComposite in2="SourceGraphic" operator="over"/>
                 </filter>
               </defs>
 
-              <!-- single heart path -->
+              <!-- rounder heart path -->
               <path filter="url(#glow)" fill="url(#gMain)"
-                d="M60 106
-                   C60 106, 18 78, 18 46
-                   C18 26, 34 16, 48 16
-                   C56 16, 60 21, 60 21
-                   C60 21, 64 16, 72 16
-                   C86 16, 102 26, 102 46
-                   C102 78, 60 106, 60 106 Z" />
+                d="M60 108
+                   C60 108, 14 80, 14 46
+                   C14 25, 31 14, 47 14
+                   C56 14, 60 20, 60 20
+                   C60 20, 64 14, 73 14
+                   C89 14, 106 25, 106 46
+                   C106 80, 60 108, 60 108 Z" />
               <path filter="url(#inner)" fill="url(#gMain)"
-                d="M60 106
-                   C60 106, 18 78, 18 46
-                   C18 26, 34 16, 48 16
-                   C56 16, 60 21, 60 21
-                   C60 21, 64 16, 72 16
-                   C86 16, 102 26, 102 46
-                   C102 78, 60 106, 60 106 Z" />
+                d="M60 108
+                   C60 108, 14 80, 14 46
+                   C14 25, 31 14, 47 14
+                   C56 14, 60 20, 60 20
+                   C60 20, 64 14, 73 14
+                   C89 14, 106 25, 106 46
+                   C106 80, 60 108, 60 108 Z" />
               <path fill="url(#gHi)" opacity="0.55"
-                d="M60 106
-                   C60 106, 18 78, 18 46
-                   C18 26, 34 16, 48 16
-                   C56 16, 60 21, 60 21
-                   C60 21, 64 16, 72 16
-                   C86 16, 102 26, 102 46
-                   C102 78, 60 106, 60 106 Z" />
+                d="M60 108
+                   C60 108, 14 80, 14 46
+                   C14 25, 31 14, 47 14
+                   C56 14, 60 20, 60 20
+                   C60 20, 64 14, 73 14
+                   C89 14, 106 25, 106 46
+                   C106 80, 60 108, 60 108 Z" />
             </svg>
           </div>
 
@@ -526,7 +533,6 @@
           <p class="finalLove">Je t’aime ma Léno ❤️</p>
         </div>
 
-        <!-- 3 slots (positions pos1 pos2 kept, pos3 added). JS rotates images -->
         <div class="finalPolaroids" aria-label="Polaroids">
           <img id="slot1" class="slot pos1" alt="photo 1">
           <img id="slot2" class="slot pos2" alt="photo 2">
@@ -538,7 +544,7 @@
   </div>
 
   <script>
-    // ========= cursor =========
+    // ===== cursor =====
     const cursorDot = document.getElementById('cursorDot');
     let curX = innerWidth/2, curY = innerHeight/2;
     let targetX = curX, targetY = curY;
@@ -565,17 +571,15 @@
       cursorDot.style.opacity = '0';
     });
 
-    // ========= background hearts =========
+    // ===== background hearts =====
     const bg = document.getElementById('bg');
     const heartChars = ["❤","💗","💖","💘","💞","💕"];
-
     function spawnBubble(){
       const el = document.createElement('div');
       el.className = 'bubble-heart';
       el.textContent = heartChars[(Math.random()*heartChars.length)|0];
 
-      const vw = innerWidth;
-      const x = Math.random() * vw;
+      const x = Math.random() * innerWidth;
       const size = 14 + Math.random()*22;
       const drift = (Math.random()*2 - 1) * 120;
       const opacity = 0.12 + Math.random()*0.22;
@@ -594,19 +598,19 @@
     setInterval(spawnBubble, 260);
     for(let i=0;i<10;i++) setTimeout(spawnBubble, i*80);
 
-    // ========= screens =========
+    // ===== screens =====
+    const card = document.getElementById('card');
     function showScreen(id){
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    // ========= NO button =========
+    // ===== NO button rules =====
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
     const hintEl = document.getElementById('hint');
 
     const noFirst = ["Non","T’es sûre ?","Réfléchis mieux…","Allez 😇","Tu vas cliquer “Oui” 😌"];
-
     const noRandomPool = [
       "On sait tous les deux que tu vas dire oui 😌",
       "Le destin a déjà choisi 💘",
@@ -630,7 +634,6 @@
       "Le ‘Non’ est en rupture de stock",
       "Le ‘Oui’ est juste là 👉"
     ];
-
     const hintSteps = [
       "PS : le bouton “Non” est un peu timide 😇",
       "Indice : il aime bien se sauver au dernier moment 😏",
@@ -647,7 +650,7 @@
 
     const COOLDOWN_MS = 260;
     const DODGE_RADIUS = 95;
-    const PADDING = 10;
+    const PADDING = 12;
 
     const clamp = (v,min,max) => Math.max(min, Math.min(max, v));
 
@@ -674,26 +677,84 @@
       if(roamingEnabled) return;
       roamingEnabled = true;
       noBtn.classList.add('fixedRoam');
-
-      // place it near where it was, but clamp by TOP-LEFT coordinates
       const r = noBtn.getBoundingClientRect();
       placeNoAt(r.left, r.top);
     }
 
+    // Forbidden zone: the main card content area (avoid texts)
+    function getForbiddenRect(){
+      const cardRect = card.getBoundingClientRect();
+      // Slightly inset to be safe
+      return {
+        left: cardRect.left + 10,
+        top: cardRect.top + 10,
+        right: cardRect.right - 10,
+        bottom: cardRect.bottom - 10
+      };
+    }
+
+    // Two-pass clamp that guarantees inside viewport, even if width changes
     function placeNoAt(left, top){
-      // Use CURRENT size after text (can change width!)
-      const r = noBtn.getBoundingClientRect();
-      const bw = r.width, bh = r.height;
+      // pass 1
+      noBtn.style.left = `${left}px`;
+      noBtn.style.top  = `${top}px`;
 
-      // If the button is bigger than available space, force inside
-      const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
-      const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
+      // pass 2 on next frame with real size
+      requestAnimationFrame(() => {
+        const r = noBtn.getBoundingClientRect();
+        const bw = r.width, bh = r.height;
 
-      const safeLeft = clamp(left, PADDING, maxLeft);
-      const safeTop  = clamp(top,  PADDING, maxTop);
+        const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
+        const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
 
-      noBtn.style.left = `${safeLeft}px`;
-      noBtn.style.top  = `${safeTop}px`;
+        let L = clamp(left, PADDING, maxLeft);
+        let T = clamp(top,  PADDING, maxTop);
+
+        // avoid forbidden zone (card)
+        const f = getForbiddenRect();
+        const proposed = { left: L, top: T, right: L + bw, bottom: T + bh };
+
+        const intersects =
+          proposed.right > f.left &&
+          proposed.left < f.right &&
+          proposed.bottom > f.top &&
+          proposed.top < f.bottom;
+
+        if(intersects){
+          // push it outside the forbidden rect in the closest direction
+          const pushLeft  = f.left - bw - PADDING;
+          const pushRight = f.right + PADDING;
+          const pushTop   = f.top - bh - PADDING;
+          const pushBot   = f.bottom + PADDING;
+
+          // choose nearest valid position
+          const candidates = [
+            {L: clamp(pushLeft,  PADDING, maxLeft),  T},
+            {L: clamp(pushRight, PADDING, maxLeft),  T},
+            {L, T: clamp(pushTop, PADDING, maxTop)},
+            {L, T: clamp(pushBot, PADDING, maxTop)}
+          ];
+
+          let best = {L, T};
+          let bestDist = Infinity;
+          for(const c of candidates){
+            const cL = c.L ?? L;
+            const cT = c.T ?? T;
+            const dx = cL - L;
+            const dy = cT - T;
+            const d = dx*dx + dy*dy;
+            if(d < bestDist){
+              bestDist = d;
+              best = {L: cL, T: cT};
+            }
+          }
+          L = best.L; T = best.T;
+        }
+
+        // final set
+        noBtn.style.left = `${L}px`;
+        noBtn.style.top  = `${T}px`;
+      });
     }
 
     function moveNoButton(){
@@ -706,7 +767,7 @@
       updateHint();
       enableRoaming();
 
-      // recompute after text set
+      // compute allowed viewport range (top-left positioning)
       const r = noBtn.getBoundingClientRect();
       const bw = r.width, bh = r.height;
 
@@ -715,33 +776,24 @@
       const maxLeft = Math.max(PADDING, innerWidth - bw - PADDING);
       const maxTop  = Math.max(PADDING, innerHeight - bh - PADDING);
 
-      // If too small screen, just clamp to middle-ish
-      let left, top;
-
-      if(maxLeft === PADDING){
-        left = PADDING;
-      } else {
-        left = minLeft + Math.random() * (maxLeft - minLeft);
-      }
-      if(maxTop === PADDING){
-        top = PADDING;
-      } else {
-        top = minTop + Math.random() * (maxTop - minTop);
-      }
-
       // avoid YES area
       const yesR = yesBtn.getBoundingClientRect();
       const yesCx = (yesR.left + yesR.right)/2;
       const yesCy = (yesR.top + yesR.bottom)/2;
 
-      let tries = 0;
-      while(tries < 30){
-        const cx = left + bw/2;
-        const cy = top + bh/2;
-        if(Math.hypot(cx - yesCx, cy - yesCy) >= 180) break;
+      let left = minLeft + Math.random() * (maxLeft - minLeft);
+      let top  = minTop  + Math.random() * (maxTop  - minTop);
 
-        left = (maxLeft === PADDING) ? PADDING : (minLeft + Math.random() * (maxLeft - minLeft));
-        top  = (maxTop  === PADDING) ? PADDING : (minTop  + Math.random() * (maxTop  - minTop));
+      let tries = 0;
+      while(tries < 40){
+        const cx = left + bw/2;
+        const cy = top  + bh/2;
+
+        const farFromYes = Math.hypot(cx - yesCx, cy - yesCy) >= 200;
+        if(farFromYes) break;
+
+        left = minLeft + Math.random() * (maxLeft - minLeft);
+        top  = minTop  + Math.random() * (maxTop  - minTop);
         tries++;
       }
 
@@ -771,7 +823,15 @@
       if(document.getElementById('screenAsk').classList.contains('active')) moveNoButton();
     });
 
-    // ========= pop hearts on YES =========
+    // Keep it clamped on resize
+    addEventListener('resize', () => {
+      if(roamingEnabled){
+        const r = noBtn.getBoundingClientRect();
+        placeNoAt(r.left, r.top);
+      }
+    });
+
+    // ===== pop hearts =====
     const fx = document.getElementById('fx');
     const popChars = ["💘","💞","💖","💕","❤","💗"];
 
@@ -779,20 +839,17 @@
       const el = document.createElement('div');
       el.className = 'popHeart';
       el.textContent = popChars[(Math.random()*popChars.length)|0];
-
       const dx = (Math.random()*2 - 1) * 140;
       const dy = -80 - Math.random()*180;
       const s  = 0.9 + Math.random()*0.9;
-      const r  = (-18 + Math.random()*36) + "deg";
-
+      const rr  = (-18 + Math.random()*36) + "deg";
       el.style.left = x + "px";
       el.style.top  = y + "px";
       el.style.setProperty('--dx', dx + "px");
       el.style.setProperty('--dy', dy + "px");
       el.style.setProperty('--s', s.toFixed(2));
-      el.style.setProperty('--r', r);
+      el.style.setProperty('--r', rr);
       el.style.fontSize = (16 + Math.random()*16) + "px";
-
       fx.appendChild(el);
       setTimeout(() => el.remove(), 950);
     }
@@ -805,13 +862,13 @@
       for(let i=0;i<8;i++) setTimeout(() => spawnPopHeart(x + (Math.random()*40-20), y + (Math.random()*20-10)), 220 + i*40);
     }
 
-    // ========= loading =========
+    // ===== loading =====
     const barFill = document.getElementById('barFill');
     const pct = document.getElementById('pct');
     const loadingText = document.getElementById('loadingText');
     const loadPhoto = document.getElementById('loadPhoto');
 
-    // IMPORTANT: reservation phrase last
+    // Reservation last
     const loadingPhrases = [
       "Chargement de l’amour en cours… 💘",
       "Préparation des sentiments… 💞",
@@ -825,7 +882,6 @@
     function easeInOutCubic(t){
       return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
     }
-
     function setLoadingPhraseSmooth(txt){
       loadingText.classList.add('fadeOut');
       setTimeout(() => {
@@ -845,12 +901,9 @@
     ];
 
     function startSlideshow(totalMs){
-      if(!loadPhoto || loadPhotos.length === 0) return null;
       let i = 0;
       loadPhoto.src = loadPhotos[0];
-
       const stepMs = Math.max(750, Math.floor(totalMs / Math.max(loadPhotos.length, 5)));
-
       const timer = setInterval(() => {
         i = (i + 1) % loadPhotos.length;
         loadPhoto.classList.add('fade');
@@ -859,30 +912,26 @@
           loadPhoto.classList.remove('fade');
         }, 220);
       }, stepMs);
-
       return timer;
     }
 
-    function showScreen(id){
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-
     function runLoading(){
+      // hide roaming no
       if(roamingEnabled){
         noBtn.style.opacity = '0';
         noBtn.style.pointerEvents = 'none';
       }
+
+      // remove big rectangle visual during loading
+      card.classList.add('loadingMode');
 
       showScreen('screenLoad');
 
       const totalMs = 5800;
       const slideTimer = startSlideshow(totalMs);
 
-      // Schedule phrases so last stays >= 1200ms
-      // 7 phrases -> 6 switches + last for 1200ms
       const lastHold = 1200;
-      const tLast = totalMs - lastHold; // moment where last phrase appears
+      const tLast = totalMs - lastHold;
 
       const schedule = [
         { t:   0, txt: loadingPhrases[0] },
@@ -891,20 +940,15 @@
         { t:2700, txt: loadingPhrases[3] },
         { t:3600, txt: loadingPhrases[4] },
         { t:4500, txt: loadingPhrases[5] },
-        { t:tLast, txt: loadingPhrases[6] } // reservation at the end, readable
+        { t:tLast, txt: loadingPhrases[6] } // NŪ last and readable
       ];
-
-      // run schedule
-      for(const s of schedule){
-        setTimeout(() => setLoadingPhraseSmooth(s.txt), s.t);
-      }
+      for(const s of schedule) setTimeout(() => setLoadingPhraseSmooth(s.txt), s.t);
 
       const start = performance.now();
 
       function tick(now){
-        const raw = clamp((now - start) / totalMs, 0, 1);
+        const raw = Math.max(0, Math.min(1, (now - start) / totalMs));
         const eased = easeInOutCubic(raw);
-
         const p = Math.round(eased * 100);
         pct.textContent = p;
         barFill.style.width = `${p}%`;
@@ -912,24 +956,24 @@
         if(raw < 1){
           requestAnimationFrame(tick);
         } else {
-          if(slideTimer) clearInterval(slideTimer);
+          clearInterval(slideTimer);
           setTimeout(() => {
+            // restore card visual for final
+            card.classList.remove('loadingMode');
             showScreen('screenDone');
-            startFinalCarousel(); // start looping photos
+            startFinalCarousel();
           }, 420);
         }
       }
       requestAnimationFrame(tick);
     }
 
-    // ========= FINAL photo carousel (3 max, every 3s, infinite) =========
+    // ===== FINAL carousel =====
     const slotEls = [
       document.getElementById('slot1'),
       document.getElementById('slot2'),
       document.getElementById('slot3')
     ];
-
-    // you can reorder / choose which images cycle here
     const finalCyclePhotos = [
       "assets/final9.png",
       "assets/final2.png",
@@ -950,7 +994,6 @@
 
     function showInSlot(slotEl, src){
       slotEl.classList.remove('show');
-      // small fade-out then swap then fade-in
       setTimeout(() => {
         slotEl.src = src;
         slotEl.style.zIndex = String(++z);
@@ -962,13 +1005,9 @@
       if(finalStarted) return;
       finalStarted = true;
 
-      // reset
       slotEls.forEach(s => { s.classList.remove('show'); s.src = ""; s.style.zIndex = "0"; });
-      finalIdx = 0;
-      slotIdx = 0;
-      z = 10;
+      finalIdx = 0; slotIdx = 0; z = 10;
 
-      // first 3 appear gradually (every 3s)
       const step = () => {
         const slot = slotEls[slotIdx % 3];
         const src = finalCyclePhotos[finalIdx % finalCyclePhotos.length];
@@ -976,11 +1015,8 @@
 
         finalIdx++;
         slotIdx++;
-
-        // continue forever
         finalTimer = setTimeout(step, 3000);
       };
-
       step();
     }
 
@@ -988,14 +1024,6 @@
     yesBtn.addEventListener('click', () => {
       popHeartsFromElement(yesBtn);
       setTimeout(runLoading, 420);
-    });
-
-    // Keep the roaming button clamped on resize
-    addEventListener('resize', () => {
-      if(roamingEnabled){
-        const r = noBtn.getBoundingClientRect();
-        placeNoAt(r.left, r.top);
-      }
     });
   </script>
 </body>
