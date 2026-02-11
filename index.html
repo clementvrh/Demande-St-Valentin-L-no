@@ -150,7 +150,7 @@
       min-height: 96px;
     }
 
-    /* NAME: starts black, then smooth glow -> pink -> glow out */
+    /* NAME glow coloring at end */
     .name{
       font-weight:950;
       color: var(--text);
@@ -160,18 +160,9 @@
       animation: nameGlow 1400ms cubic-bezier(.22,.61,.36,1) forwards;
     }
     @keyframes nameGlow{
-      0%{
-        color: var(--text);
-        text-shadow: 0 0 0 rgba(255,47,107,0);
-      }
-      45%{
-        color: var(--pink2);
-        text-shadow: 0 0 22px rgba(255,47,107,.60), 0 0 44px rgba(255,47,107,.28);
-      }
-      100%{
-        color: var(--pink2);
-        text-shadow: 0 0 0 rgba(255,47,107,0);
-      }
+      0%{ color: var(--text); text-shadow: 0 0 0 rgba(255,47,107,0); }
+      45%{ color: var(--pink2); text-shadow: 0 0 22px rgba(255,47,107,.60), 0 0 44px rgba(255,47,107,.28); }
+      100%{ color: var(--pink2); text-shadow: 0 0 0 rgba(255,47,107,0); }
     }
 
     /* typewriter: smoother per char */
@@ -211,14 +202,16 @@
       min-width:120px;
     }
 
+    /* ✅ stable NO width so long text doesn't break placement */
     #noBtn{
       background: rgba(255,77,121,.10);
       color: var(--pink2);
       border: 1px solid rgba(255,77,121,.25);
-      min-width:130px;
-      max-width: 240px;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      width: 220px;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       box-shadow: 0 10px 24px rgba(0,0,0,.06);
       backdrop-filter: blur(8px);
     }
@@ -394,6 +387,26 @@
 
     .slot.pos3{ right:-62px; top:145px; transform: rotate(3deg) translateY(6px); }
     .slot.pos3.show{ transform: rotate(3deg) translateY(0); }
+
+    @media (max-width: 980px){
+      .finalPolaroids{
+        position: static;
+        width:auto;
+        height:auto;
+        margin: 18px auto 0;
+        display:flex;
+        gap:14px;
+        justify-content:center;
+        pointer-events:auto;
+      }
+      .slot{
+        position: static;
+        width: min(300px, 70vw);
+        transform:none !important;
+        opacity:1;
+      }
+      .slot.show{ opacity:1; transform:none; }
+    }
   </style>
 </head>
 
@@ -513,7 +526,7 @@
       document.getElementById(id).classList.add('active');
     }
 
-    // ===== typewriter + glow coloring at end =====
+    // ===== typewriter + glow coloring =====
     const titleEl = document.getElementById('questionTitle');
     const finalTitleHTML =
       `<span class="name" id="nameSpan">Lénora Deparis Verhoeven</span>,<br/>veux-tu être ma Valentine ?`;
@@ -524,7 +537,7 @@
       let i = 0;
 
       const startDelay = 520;
-      const baseDelay = 56;   // slower
+      const baseDelay = 56;
       const jitterMax = 26;
 
       const step = () => {
@@ -541,10 +554,7 @@
           const jitter = (Math.random()*jitterMax)|0;
           setTimeout(step, baseDelay + jitter);
         } else {
-          // swap to final html (name span exists)
           el.innerHTML = finalTitleHTML;
-
-          // smooth glow coloring animation
           const nameSpan = document.getElementById('nameSpan');
           requestAnimationFrame(() => nameSpan.classList.add('glowAnim'));
         }
@@ -554,24 +564,20 @@
     }
     typewriter(titleEl);
 
-    // ===== NO button: robust random placement within viewport + safety margin =====
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const hintEl = document.getElementById('hint');
-
+    // ===== texts =====
     const noFirst = ["Non","T’es sûre ?","Réfléchis mieux…","Allez 😇","Tu vas cliquer “Oui” 😌"];
     const noRandomPool = [
       "On sait tous les deux que tu vas dire oui 😌",
       "Le destin a déjà choisi 💘",
-      "Le bouton ‘Oui’ te regarde 👀",
+      "Le bouton “Oui” te regarde 👀",
       "Attention moi aussi je sais bouder…",
       "Tu veux vraiment me briser le cœur ? 🥺",
-      "Erreur 404 : ‘Non’ introuvable",
+      "Erreur 404 : “Non” introuvable",
       "Je refuse d’exister sans ton oui 😭",
-      "Clique oui et je te fais un bisou",
+      "Clique oui et je te fais un bisou 😘",
       "Ce bouton est en RTT aujourd’hui",
-      "T’as glissé… vers ‘Oui’ 🙂",
-      "Ça sent le ‘Oui’ à plein nez",
+      "T’as glissé… vers “Oui” 🙂",
+      "Ça sent le “Oui” à plein nez",
       "On recommence : tu dis oui ? 😇",
       "Je suis programmé pour fuir 😎",
       "Tu veux jouer ? Moi aussi 😈",
@@ -580,9 +586,13 @@
       "Je fais semblant d’être un choix",
       "Bon… ça suffit, clique Oui ma Léno 😘",
       "Désolé, ce bouton n’est pas l’option aujourd’hui 💅",
-      "Le ‘Non’ est en rupture de stock",
-      "Le ‘Oui’ est juste là 👉"
+      "Le “Non” est en rupture de stock",
+      "Le “Oui” est juste là 👉",
+      "Promis après on mange un dessert 🍰",
+      "Je vais faire semblant de ne pas entendre 🙉",
+      "Ça lag… clique Oui pour réparer 🛠️"
     ];
+
     const hintSteps = [
       "PS : le bouton “Non” est un peu timide 😇",
       "Indice : il aime bien se sauver au dernier moment 😏",
@@ -592,28 +602,34 @@
       "Il faut cliquer sur oui ma Léno... ❤️"
     ];
 
+    // ===== NO button logic: "first version" style, but stable =====
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const hintEl = document.getElementById('hint');
+
+    const SAFE_MARGIN = 26;   // safety margin so it never touches the edges
+    const NEAR = 90;
+    const FAR  = 170;
+    const COOLDOWN = 260;
+
+    let armed = true;
+    let lastMoveAt = 0;
+    let roaming = false;
+
     let noInteractions = 0;
     let lastRandomIdx = -1;
 
-    const NEAR = 90;
-    const FAR  = 160;
-    let armed = true;
-
-    const MOVE_COOLDOWN = 260;
-    let lastMoveAt = 0;
-
-    const SAFE_MARGIN = 22; // ✅ marge sécurité bord écran
-
-    const clamp = (v,mi,ma)=>Math.max(mi,Math.min(ma,v));
+    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
     function setNoText(){
+      noInteractions++;
       if(noInteractions <= 5){
         noBtn.textContent = noFirst[noInteractions - 1];
         return;
       }
       let idx;
-      do{ idx = (Math.random()*noRandomPool.length)|0; }
-      while(noRandomPool.length>1 && idx === lastRandomIdx);
+      do { idx = (Math.random()*noRandomPool.length)|0; }
+      while(noRandomPool.length > 1 && idx === lastRandomIdx);
       lastRandomIdx = idx;
       noBtn.textContent = noRandomPool[idx];
     }
@@ -625,78 +641,44 @@
       hintEl.textContent = hintSteps[step];
     }
 
-    function enableRoam(){
-      if(noBtn.classList.contains('roam')) return;
+    function enableRoamOnce(){
+      if(roaming) return;
+      roaming = true;
       noBtn.classList.add('roam');
       const r = noBtn.getBoundingClientRect();
       noBtn.style.left = r.left + "px";
       noBtn.style.top  = r.top + "px";
     }
 
-    // two-pass safe placement (handles text width change)
-    function placeNoSafelyRandom(){
-      // pass A: pick random, set
-      const rA = noBtn.getBoundingClientRect();
-      const wA = rA.width || 160;
-      const hA = rA.height || 44;
+    function placeNoRandom(){
+      const r = noBtn.getBoundingClientRect();
+      const w = r.width, h = r.height;
 
-      const minL_A = SAFE_MARGIN;
-      const minT_A = SAFE_MARGIN;
-      const maxL_A = Math.max(SAFE_MARGIN, innerWidth - wA - SAFE_MARGIN);
-      const maxT_A = Math.max(SAFE_MARGIN, innerHeight - hA - SAFE_MARGIN);
+      const minL = SAFE_MARGIN;
+      const minT = SAFE_MARGIN;
+      const maxL = Math.max(SAFE_MARGIN, innerWidth  - w - SAFE_MARGIN);
+      const maxT = Math.max(SAFE_MARGIN, innerHeight - h - SAFE_MARGIN);
 
-      let left = minL_A + Math.random() * (maxL_A - minL_A);
-      let top  = minT_A + Math.random() * (maxT_A - minT_A);
+      let left = minL + Math.random() * (maxL - minL);
+      let top  = minT + Math.random() * (maxT - minT);
 
-      noBtn.style.left = `${left}px`;
-      noBtn.style.top  = `${top}px`;
+      // avoid YES area
+      const yesR = yesBtn.getBoundingClientRect();
+      const yesCx = (yesR.left + yesR.right)/2;
+      const yesCy = (yesR.top + yesR.bottom)/2;
 
-      // pass B: next frame, read true size, clamp again (this prevents overflow)
-      requestAnimationFrame(() => {
-        const rB = noBtn.getBoundingClientRect();
-        const wB = rB.width;
-        const hB = rB.height;
+      let tries = 0;
+      while(tries < 20){
+        const cx = left + w/2;
+        const cy = top + h/2;
+        if(Math.hypot(cx - yesCx, cy - yesCy) > 190) break;
+        left = minL + Math.random() * (maxL - minL);
+        top  = minT + Math.random() * (maxT - minT);
+        tries++;
+      }
 
-        const minL = SAFE_MARGIN;
-        const minT = SAFE_MARGIN;
-        const maxL = Math.max(SAFE_MARGIN, innerWidth - wB - SAFE_MARGIN);
-        const maxT = Math.max(SAFE_MARGIN, innerHeight - hB - SAFE_MARGIN);
-
-        // if screen is tiny, clamp will collapse, still safe.
-        left = clamp(left, minL, maxL);
-        top  = clamp(top,  minT, maxT);
-
-        // avoid being too close to YES button (optional but nicer)
-        const yesR = yesBtn.getBoundingClientRect();
-        const yesCx = (yesR.left + yesR.right)/2;
-        const yesCy = (yesR.top + yesR.bottom)/2;
-
-        let tries = 0;
-        while(tries < 18){
-          const cx = left + wB/2;
-          const cy = top + hB/2;
-          if(Math.hypot(cx - yesCx, cy - yesCy) >= 190) break;
-
-          left = minL + Math.random() * (maxL - minL);
-          top  = minT + Math.random() * (maxT - minT);
-          tries++;
-        }
-
-        noBtn.style.left = `${left}px`;
-        noBtn.style.top  = `${top}px`;
-      });
-    }
-
-    function moveNo(){
-      const now = Date.now();
-      if(now - lastMoveAt < MOVE_COOLDOWN) return;
-      lastMoveAt = now;
-
-      noInteractions++;
-      setNoText();
-      updateHint();
-      enableRoam();
-      placeNoSafelyRandom();
+      noBtn.style.left = `${clamp(left, minL, maxL)}px`;
+      noBtn.style.top  = `${clamp(top,  minT, maxT)}px`;
     }
 
     function distToNo(x,y){
@@ -704,6 +686,17 @@
       const cx = (r.left + r.right)/2;
       const cy = (r.top + r.bottom)/2;
       return Math.hypot(x - cx, y - cy);
+    }
+
+    function moveNo(){
+      const now = Date.now();
+      if(now - lastMoveAt < COOLDOWN) return;
+      lastMoveAt = now;
+
+      enableRoamOnce();
+      setNoText();
+      updateHint();
+      placeNoRandom();
     }
 
     addEventListener('mousemove', (e) => {
@@ -722,15 +715,13 @@
     });
 
     addEventListener('resize', () => {
-      if(noBtn.classList.contains('roam')){
-        // clamp current position with safe margin
-        const r = noBtn.getBoundingClientRect();
-        const w = r.width, h = r.height;
-        const left = clamp(r.left, SAFE_MARGIN, innerWidth - w - SAFE_MARGIN);
-        const top  = clamp(r.top,  SAFE_MARGIN, innerHeight - h - SAFE_MARGIN);
-        noBtn.style.left = left + "px";
-        noBtn.style.top  = top + "px";
-      }
+      if(!roaming) return;
+      const r = noBtn.getBoundingClientRect();
+      const w = r.width, h = r.height;
+      const left = clamp(r.left, SAFE_MARGIN, innerWidth - w - SAFE_MARGIN);
+      const top  = clamp(r.top,  SAFE_MARGIN, innerHeight - h - SAFE_MARGIN);
+      noBtn.style.left = left + "px";
+      noBtn.style.top  = top + "px";
     });
 
     // ===== pop hearts on yes =====
@@ -814,7 +805,6 @@
     }
 
     function runLoading(){
-      // hide no button during loading (cleaner)
       if(noBtn.classList.contains('roam')){
         noBtn.style.opacity = '0';
         noBtn.style.pointerEvents = 'none';
